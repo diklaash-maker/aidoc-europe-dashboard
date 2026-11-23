@@ -1,0 +1,6 @@
+﻿metric,customer_id,logo_id,region,country,reason
+Country contribution,C-128,EU-ES-L2463,EU,Spain,Country not active: Proposed (FY27)
+"Current metrics (ARR, customers, payback, ARR per bed, contribution)",C-113,EU-NO-L3724,EU,Norway,Churned
+All metrics,C-123,EU-FR-L1272,EU,France,Duplicate of C-095
+All metrics,C-124,US-L0352,US,United States,Duplicate of C-030
+All metrics,C-125,TEST-0001,EU,Germany,Logo not in master

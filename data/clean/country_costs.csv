@@ -1,0 +1,15 @@
+﻿country,region,status,year_entered,languages,annual_fixed_cost_usd
+United States,US,Active,2016,English,1400000
+Germany,EU,Active,2019,German,550000
+United Kingdom,EU,Active,2020,English,400000
+France,EU,Active,2021,French,520000
+Netherlands,EU,Active,2021,Dutch,380000
+Austria,EU,Active,2022,German,300000
+Italy,EU,Active,2022,Italian,480000
+Sweden,EU,Active,2023,Swedish,360000
+Norway,EU,Active,2024,Norwegian,340000
+Portugal,EU,Active,2025,Portuguese,360000
+Poland,EU,Proposed (FY27),,Polish,450000
+Spain,EU,Proposed (FY27),,Spanish,460000
+Belgium,EU,Proposed (FY27),,"French, Dutch",400000
+Switzerland,EU,Proposed (FY27),,"German, French, Italian",380000

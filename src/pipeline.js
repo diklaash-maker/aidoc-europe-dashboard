@@ -133,6 +133,103 @@
     });
   }
 
+  // ---------- quarterly_arr ----------
+  function cleanQuarterlyArr(rows, ctx, customers) {
+    const validLogos = new Set(customers.filter((c) => c.is_valid_customer).map((c) => c.logo_id));
+    const out = [];
+    for (const [logoId, history] of Object.entries(ctx.billing)) {
+      const logo = ctx.logosById[logoId];
+      history.forEach((r, i) => {
+        const prev = i > 0 ? history[i - 1].arr_usd : '';
+        const change = prev > 0 ? r.arr_usd / prev - 1 : '';
+        out.push({
+          ...r,
+          region: logo ? logo.region : String(logoId).slice(0, 2),
+          country: logo ? logo.country : '',
+          is_valid_customer: validLogos.has(logoId) ? 1 : 0,
+          is_active_customer: r.arr_usd > 0 ? 1 : 0,                       // Q-01
+          prev_arr_usd: prev,
+          arr_change_pct: change === '' ? '' : Math.round(change * 1000) / 1000,
+          is_arr_jump: change !== '' && r.arr_usd > 0 && Math.abs(change) > ARR_JUMP_THRESHOLD ? 1 : 0, // Q-02
+        });
+      });
+    }
+    return out.sort((a, b) => (a.logo_id + a.quarter < b.logo_id + b.quarter ? -1 : 1));
+  }
+
+  // ARR per bed of currently active customers, per region (D-02)
+  function arrPerBed(customers, logosById) {
+    const acc = {};
+    for (const c of customers) {
+      if (!c.is_currently_active_customer) continue;
+      const a = (acc[c.region_clean] = acc[c.region_clean] || { arr: 0, beds: 0 });
+      a.arr += c.current_arr_usd;
+      a.beds += logosById[c.logo_id].total_beds;
+    }
+    const out = {};
+    for (const k in acc) out[k] = acc[k].arr / acc[k].beds;
+    return out;
+  }
+
+  // ---------- logos ----------
+  function cleanLogos(rows, ctx, customers, perBed) {
+    const cust = {};
+    for (const c of customers) if (c.is_valid_customer) cust[c.logo_id] = c;
+    return rows.map((l) => {
+      const c = cust[l.logo_id];
+      // C-08 / C-12: status comes from the customers table
+      const status = !c ? 'Prospect' : c.is_currently_active_customer ? 'Customer' : c.is_churned_customer ? 'Churned' : 'Customer (no billing)';
+      const cost = ctx.costsByCountry[l.country];
+      return {
+        ...l,
+        logo_status: status,
+        country_status: cost ? cost.status : 'Unknown',
+        current_arr_usd: c && c.current_arr_usd !== '' ? c.current_arr_usd : '',
+        // assumptions: estimated ARR of a prospect = total_beds x ARR per bed of its region
+        estimated_prospect_arr: status === 'Prospect' && perBed[l.region] ? Math.round(l.total_beds * perBed[l.region]) : '',
+      };
+    });
+  }
+
+  // ---------- plan ----------
+  function cleanPlan(rows, ctx, customers, quarterlyArr) {
+    return rows.filter((p) => p.region && QUARTER_FORMAT.test(p.quarter)).map((p) => {
+      const loaded = p.quarter <= ctx.through;
+      const actualArr = quarterlyArr
+        .filter((r) => r.is_valid_customer && r.region === p.region && r.quarter === p.quarter)
+        .reduce((s, r) => s + r.arr_usd, 0);
+      const actualNew = customers.filter((c) => c.is_valid_customer && c.region_clean === p.region && c.signed_quarter === p.quarter).length;
+      const ratio = (a, b) => (loaded && b ? Math.round((a / b) * 1000) / 1000 : '');
+      return {
+        ...p,
+        is_loaded_quarter: loaded ? 1 : 0,
+        actual_arr_usd: loaded ? actualArr : '',
+        arr_attainment: ratio(actualArr, p.arr_plan_usd),
+        actual_new_customers: loaded ? actualNew : '',
+        new_customers_attainment: ratio(actualNew, p.new_customers_plan),
+      };
+    });
+  }
+
+  // ---------- metric exclusions ----------
+  // One row per customer left out of a metric group, with the reason
+  function metricExclusions(customers) {
+    const out = [];
+    const add = (metric, c, reason) =>
+      out.push({ metric, customer_id: c.customer_id, logo_id: c.logo_id, region: c.region_clean, country: c.country_clean, reason });
+    for (const c of customers) {
+      if (!c.is_valid_customer) { add('All metrics', c, c.customer_exclusion_reason); continue; }
+      if (!c.is_currently_active_customer) {
+        const reason = c.is_churned_customer ? 'Churned' : (c.customer_warnings.match(/No billing[^;]*/) || ['Not active'])[0];
+        add('Current metrics (ARR, customers, payback, ARR per bed, contribution)', c, reason);
+        continue;
+      }
+      if (!c.is_in_contribution) add('Country contribution', c, 'Country not active: ' + c.country_status);
+      if (!(c.cac_usd > 0)) add('Payback', c, 'No CAC');
+    }
+    return out;
+  }
+
   // ---------- run ----------
   function run(raw, opts = {}) {
     const countryCosts = cleanCountryCosts(raw.country_costs || []);
@@ -153,16 +250,22 @@
       billing: billingByLogo(quarterlyArr),
     };
     const cleanCust = cleanCustomers(customers, ctx);
-
-    return {
-      data_through: through,
-      tables: { customers: cleanCust },
-      summary: summarize(cleanCust, through),
+    const cleanArr = cleanQuarterlyArr(quarterlyArr, ctx, cleanCust);
+    const perBed = arrPerBed(cleanCust, ctx.logosById);
+    const tables = {
+      customers: cleanCust,
+      quarterly_arr: cleanArr,
+      logos: cleanLogos(raw.logos || [], ctx, cleanCust, perBed),
+      country_costs: countryCosts,
+      plan: cleanPlan(raw.plan || [], ctx, cleanCust, cleanArr),
+      metric_exclusions: metricExclusions(cleanCust),
     };
+    return { data_through: through, tables, summary: summarize(tables, through, perBed) };
   }
 
   // Quick numbers to check the output against known values
-  function summarize(customers, through) {
+  function summarize(tables, through, perBed) {
+    const customers = tables.customers;
     const out = { data_through: through, rows: customers.length, excluded: [], regions: {} };
     for (const c of customers) {
       if (!c.is_valid_customer) out.excluded.push(c.customer_id + ' ' + c.logo_id + ': ' + c.customer_exclusion_reason);
@@ -172,6 +275,20 @@
       r.churned += c.is_churned_customer;
       if (c.is_currently_active_customer) r.current_arr_usd += c.current_arr_usd;
     }
+    // YoY growth and plan attainment in the latest quarter
+    const lastYear = (+through.slice(0, 4) - 1) + through.slice(4);
+    for (const reg in out.regions) {
+      const arrIn = (q) => tables.quarterly_arr.filter((r) => r.is_valid_customer && r.region === reg && r.quarter === q).reduce((s, r) => s + r.arr_usd, 0);
+      const now = arrIn(through), before = arrIn(lastYear);
+      out.regions[reg].yoy_growth = before ? Math.round((now / before - 1) * 1000) / 10 + '%' : '';
+      const p = tables.plan.find((x) => x.region === reg && x.quarter === through);
+      out.regions[reg].arr_attainment = p ? Math.round(p.arr_attainment * 1000) / 10 + '%' : '';
+      out.regions[reg].arr_per_bed = Math.round(perBed[reg] || 0);
+    }
+    out.logo_status = {};
+    for (const l of tables.logos) out.logo_status[l.logo_status] = (out.logo_status[l.logo_status] || 0) + 1;
+    out.arr_jumps = tables.quarterly_arr.filter((r) => r.is_arr_jump).map((r) => r.logo_id + ' ' + r.quarter + ' ' + Math.round(r.arr_change_pct * 100) + '%');
+    out.metric_exclusions = tables.metric_exclusions.length;
     return out;
   }
 

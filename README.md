@@ -25,6 +25,19 @@ data/raw  →  src/pipeline.js  →  data/clean  →  Tableau (exploration)
 | `docs/` | Data Rules.xlsx |
 | `index.html` | The dashboard (later) |
 
+## Clean tables (data/clean)
+
+| Table | Grain | Added fields |
+|---|---|---|
+| `customers` | one row per customer record (incl. excluded rows) | country_clean, region_clean, country_status, current_arr_usd, is_valid_customer, customer_exclusion_reason, is_currently_active_customer, is_churned_customer, is_in_contribution, gross_profit_usd, payback_months, customer_warnings, customer_warning_count |
+| `quarterly_arr` | one row per logo per quarter | region, country, is_valid_customer, is_active_customer, prev_arr_usd, arr_change_pct, is_arr_jump |
+| `logos` | one row per logo (whole market) | logo_status (Customer / Churned / Prospect), country_status, current_arr_usd, estimated_prospect_arr |
+| `country_costs` | one row per country | table rows only (notes removed, CC-01) |
+| `plan` | one row per region per quarter | is_loaded_quarter, actual_arr_usd, arr_attainment, actual_new_customers, new_customers_attainment |
+| `metric_exclusions` | one row per customer left out of a metric | metric, reason |
+
+Join keys: `logo_id` (customers, quarterly_arr, logos), `country_clean` = `country_costs.country`, `region` + `quarter` (plan).
+
 ## Running the export
 
 One time setup: install [Node.js](https://nodejs.org), then run `npm install` in this folder.
@@ -46,6 +59,6 @@ The console prints a summary (excluded rows, valid / active / churned customers 
 
 - [x] Data exploration and cleaning rules (docs/Data Rules.xlsx)
 - [x] Pipeline: customers
-- [ ] Pipeline: quarterly_arr, logos, country_costs, plan
-- [ ] Metric exclusions
+- [x] Pipeline: quarterly_arr, logos, country_costs, plan
+- [x] Metric exclusions
 - [ ] Dashboard
