@@ -25,14 +25,27 @@ data/raw  →  src/pipeline.js  →  data/clean  →  Tableau (exploration)
 | `docs/` | Data Rules.xlsx |
 | `index.html` | The dashboard (later) |
 
+## Running the export
+
+One time setup: install [Node.js](https://nodejs.org), then run `npm install` in this folder.
+
+```
+npm run export                       # all files in data/raw   -> data/clean/
+npm run export -- --through 2026-Q3  # data through 2026-Q3     -> data/clean/as_of_2026-Q3/
+```
+
+The console prints a summary (excluded rows, valid / active / churned customers and current ARR per region) to check the output.
+
 ## Adding next quarter's data
 
-To be written once the pipeline exists.
+1. Copy the new quarter's Excel file into `data/raw/` (same sheet formats: `customers_new`, `quarterly_arr`).
+2. Run `npm run export`.
+3. Check the summary and the warnings in `data/clean/customers.csv`.
 
 ## Status
 
 - [x] Data exploration and cleaning rules (docs/Data Rules.xlsx)
-- [ ] Pipeline: customers
+- [x] Pipeline: customers
 - [ ] Pipeline: quarterly_arr, logos, country_costs, plan
 - [ ] Metric exclusions
 - [ ] Dashboard

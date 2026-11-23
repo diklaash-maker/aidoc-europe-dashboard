@@ -1,0 +1,126 @@
+﻿customer_id,logo_id,region,country,signed_quarter,arr_usd,products,cac_usd,sales_rep,customer_source_file,country_clean,region_clean,country_status,current_arr_usd,is_valid_customer,customer_exclusion_reason,is_currently_active_customer,is_churned_customer,is_in_contribution,gross_profit_usd,payback_months,customer_warnings,customer_warning_count
+C-001,US-L0347,US,United States,2017-Q2,2438900,7,233000,Ben Hartley,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,2438900,1,,1,0,1,1951120,1.4,,0
+C-002,US-L0384,US,United States,2017-Q2,389900,6,405000,Priya Raman,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,389900,1,,1,0,1,311920,15.6,,0
+C-003,US-L0419,US,United States,2017-Q3,506500,9,279000,Dana Whitfield,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,506500,1,,1,0,1,405200,8.3,,0
+C-004,US-L0353,US,United States,2017-Q4,1011000,6,339000,Tom Gallagher,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1011000,1,,1,0,1,808800,5,,0
+C-005,US-L0278,US,United States,2018-Q1,654200,11,352000,Lauren Fitch,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,654200,1,,1,0,1,523360,8.1,,0
+C-006,US-L0482,US,United States,2018-Q3,1915500,12,329000,Alicia Moreno,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1915500,1,,1,0,1,1532400,2.6,,0
+C-007,US-L0426,US,United States,2018-Q3,2622700,10,269000,Ben Hartley,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,2622700,1,,1,0,1,2098160,1.5,,0
+C-008,US-L0200,US,United States,2018-Q4,2962900,12,255000,Dana Whitfield,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,2962900,1,,1,0,1,2370320,1.3,,0
+C-009,US-L0438,US,United States,2018-Q4,1082000,10,260000,Tom Gallagher,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1082000,1,,1,0,1,865600,3.6,,0
+C-010,US-L0290,US,United States,2019-Q2,1296100,10,387000,Ben Hartley,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1296100,1,,1,0,1,1036880,4.5,,0
+C-011,US-L0036,US,United States,2019-Q4,1624600,7,244000,Dana Whitfield,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1624600,1,,1,0,1,1299680,2.3,,0
+C-012,US-L0193,US,United States,2019-Q4,1112800,12,307000,Keisha Grant,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1112800,1,,1,0,1,890240,4.1,,0
+C-013,US-L0343,US,United States,2019-Q4,1126600,9,401000,Ben Hartley,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1126600,1,,1,0,1,901280,5.3,,0
+C-014,US-L0226,US,United States,2019-Q4,1366600,11,293000,Ben Hartley,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1366600,1,,1,0,1,1093280,3.2,,0
+C-015,US-L0360,US,United States,2019-Q4,1078700,10,266000,Ryan Okafor,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1078700,1,,1,0,1,862960,3.7,,0
+C-016,US-L0018,US,United States,2019-Q4,2194900,11,278000,Lauren Fitch,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,2194900,1,,1,0,1,1755920,1.9,,0
+C-017,US-L0246,US,United States,2020-Q1,527900,10,322000,Ryan Okafor,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,527900,1,,1,0,1,422320,9.1,,0
+C-018,US-L0198,US,United States,2020-Q1,3249700,14,276000,Priya Raman,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,3249700,1,,1,0,1,2599760,1.3,,0
+C-019,US-L0185,US,United States,2020-Q3,326100,5,266000,Ryan Okafor,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,326100,1,,1,0,1,260880,12.2,,0
+C-020,US-L0013,US,United States,2020-Q4,976300,7,263000,Marcus Lee,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,976300,1,,1,0,1,781040,4,,0
+C-021,US-L0125,US,United States,2020-Q4,2250200,12,274000,Alicia Moreno,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,2250200,1,,1,0,1,1800160,1.8,,0
+C-022,US-L0073,US,United States,2020-Q4,418200,11,328000,Lauren Fitch,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,418200,1,,1,0,1,334560,11.8,,0
+C-023,US-L0251,US,United States,2020-Q4,794500,8,293000,Lauren Fitch,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,794500,1,,1,0,1,635600,5.5,,0
+C-024,US-L0240,US,United States,2020-Q4,691700,9,258000,Dana Whitfield,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,691700,1,,1,0,1,553360,5.6,,0
+C-025,US-L0436,US,United States,2021-Q1,1192600,8,364000,Dana Whitfield,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1192600,1,,1,0,1,954080,4.6,,0
+C-026,US-L0405,US,United States,2021-Q1,2245000,9,190000,Tom Gallagher,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,2245000,1,,1,0,1,1796000,1.3,,0
+C-027,US-L0332,US,United States,2021-Q3,1510400,5,342000,Sam Delgado,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1510400,1,,1,0,1,1208320,3.4,,0
+C-028,US-L0413,US,United States,2021-Q3,2487100,8,370000,Keisha Grant,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,2487100,1,,1,0,1,1989680,2.2,,0
+C-029,US-L0265,US,United States,2021-Q4,774500,11,372000,Priya Raman,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,774500,1,,1,0,1,619600,7.2,,0
+C-030,US-L0352,US,United States,2021-Q4,2957100,11,289000,Alicia Moreno,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,2957100,1,,1,0,1,2365680,1.5,,0
+C-031,US-L0492,US,United States,2021-Q4,1594700,9,234000,Lauren Fitch,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1594700,1,,1,0,1,1275760,2.2,,0
+C-032,US-L0494,US,United States,2021-Q4,911800,4,239000,Sam Delgado,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,911800,1,,1,0,1,729440,3.9,,0
+C-033,US-L0502,US,United States,2021-Q4,382700,11,313000,Ryan Okafor,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,382700,1,,1,0,1,306160,12.3,,0
+C-034,US-L0249,US,United States,2021-Q4,1214900,8,340000,Dana Whitfield,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1214900,1,,1,0,1,971920,4.2,,0
+C-035,US-L0385,US,United States,2021-Q4,247700,8,300000,Alicia Moreno,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,247700,1,,1,0,1,198160,18.2,,0
+C-036,US-L0146,US,United States,2022-Q1,1581400,12,279000,Dana Whitfield,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1581400,1,,1,0,1,1265120,2.6,,0
+C-037,US-L0264,US,United States,2022-Q1,921500,7,331000,Keisha Grant,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,921500,1,,1,0,1,737200,5.4,,0
+C-038,US-L0181,US,United States,2022-Q1,2807000,12,331000,Dana Whitfield,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,2807000,1,,1,0,1,2245600,1.8,,0
+C-039,US-L0471,US,United States,2022-Q2,119200,9,290000,Sam Delgado,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,119200,1,,1,0,1,95360,36.5,,0
+C-040,US-L0111,US,United States,2022-Q2,1050900,12,269000,Priya Raman,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1050900,1,,1,0,1,840720,3.8,,0
+C-041,US-L0243,US,United States,2022-Q2,2171400,9,301000,Alicia Moreno,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,2171400,1,,1,0,1,1737120,2.1,,0
+C-042,US-L0258,US,United States,2022-Q2,2327600,11,347000,Marcus Lee,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,2327600,1,,1,0,1,1862080,2.2,,0
+C-043,US-L0456,US,United States,2022-Q3,1815100,7,397000,Marcus Lee,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1815100,1,,1,0,1,1452080,3.3,,0
+C-044,US-L0138,US,United States,2022-Q3,1690900,8,286000,Priya Raman,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1690900,1,,1,0,1,1352720,2.5,,0
+C-045,US-L0511,US,United States,2022-Q4,503900,11,253000,Ben Hartley,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,503900,1,,1,0,1,403120,7.5,,0
+C-046,US-L0472,US,United States,2022-Q4,256500,9,224000,Keisha Grant,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,256500,1,,1,0,1,205200,13.1,,0
+C-047,US-L0459,US,United States,2022-Q4,2683000,12,401000,Tom Gallagher,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,2683000,1,,1,0,1,2146400,2.2,,0
+C-048,US-L0259,US,United States,2023-Q1,1074900,6,425000,Priya Raman,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1074900,1,,1,0,1,859920,5.9,,0
+C-049,US-L0279,US,United States,2023-Q1,2148900,12,211000,Tom Gallagher,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,2148900,1,,1,0,1,1719120,1.5,,0
+C-050,US-L0238,US,United States,2023-Q1,1869300,10,323000,Dana Whitfield,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1869300,1,,1,0,1,1495440,2.6,,0
+C-051,US-L0150,US,United States,2023-Q3,1441500,8,249000,Dana Whitfield,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1441500,1,,1,0,1,1153200,2.6,,0
+C-052,US-L0001,US,United States,2023-Q3,651900,8,325000,Ben Hartley,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,651900,1,,1,0,1,521520,7.5,,0
+C-053,US-L0312,US,United States,2023-Q3,1387500,12,289000,Priya Raman,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1387500,1,,1,0,1,1110000,3.1,,0
+C-054,US-L0442,US,United States,2023-Q3,1446700,6,336000,Marcus Lee,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1446700,1,,1,0,1,1157360,3.5,,0
+C-055,US-L0162,US,United States,2023-Q3,1161000,6,217000,Ben Hartley,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1161000,1,,1,0,1,928800,2.8,,0
+C-056,US-L0090,US,United States,2023-Q3,2553900,10,299000,Tom Gallagher,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,2553900,1,,1,0,1,2043120,1.8,,0
+C-057,US-L0350,US,United States,2023-Q3,633400,9,362000,Ryan Okafor,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,633400,1,,1,0,1,506720,8.6,,0
+C-058,US-L0406,US,United States,2023-Q4,1416900,6,409000,Keisha Grant,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1416900,1,,1,0,1,1133520,4.3,,0
+C-059,US-L0286,US,United States,2023-Q4,1210600,6,279000,Ben Hartley,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1210600,1,,1,0,1,968480,3.5,,0
+C-060,US-L0115,US,United States,2023-Q4,658400,10,325000,Alicia Moreno,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,658400,1,,1,0,1,526720,7.4,,0
+C-061,US-L0049,US,United States,2023-Q4,1198500,10,364000,Tom Gallagher,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1198500,1,,1,0,1,958800,4.6,,0
+C-062,US-L0128,US,United States,2023-Q4,1730800,12,276000,Dana Whitfield,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1730800,1,,1,0,1,1384640,2.4,,0
+C-063,US-L0075,US,United States,2023-Q4,1113900,7,313000,Keisha Grant,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1113900,1,,1,0,1,891120,4.2,,0
+C-064,US-L0038,US,United States,2024-Q2,2121000,11,287000,Keisha Grant,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,2121000,1,,1,0,1,1696800,2,,0
+C-065,US-L0316,US,United States,2024-Q2,1618200,10,286000,Ryan Okafor,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1618200,1,,1,0,1,1294560,2.7,,0
+C-066,US-L0165,US,United States,2024-Q2,1334000,7,279000,Alicia Moreno,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1334000,1,,1,0,1,1067200,3.1,,0
+C-067,US-L0171,US,United States,2024-Q2,2534700,10,305000,Keisha Grant,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,2534700,1,,1,0,1,2027760,1.8,,0
+C-068,US-L0401,US,United States,2024-Q3,845600,9,266000,Marcus Lee,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,845600,1,,1,0,1,676480,4.7,,0
+C-069,US-L0300,US,United States,2024-Q3,4398900,10,259000,Lauren Fitch,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,4398900,1,,1,0,1,3519120,0.9,,0
+C-070,US-L0222,US,United States,2024-Q3,1922200,8,318000,Priya Raman,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1922200,1,,1,0,1,1537760,2.5,,0
+C-071,US-L0026,US,United States,2024-Q3,2139500,14,218000,Dana Whitfield,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,2139500,1,,1,0,1,1711600,1.5,,0
+C-072,US-L0233,US,United States,2024-Q4,280200,9,240000,Ben Hartley,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,280200,1,,1,0,1,224160,12.8,,0
+C-073,US-L0374,US,United States,2024-Q4,791700,7,332000,Keisha Grant,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,791700,1,,1,0,1,633360,6.3,,0
+C-074,US-L0166,US,United States,2024-Q4,2353200,7,279000,Priya Raman,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,2353200,1,,1,0,1,1882560,1.8,,0
+C-075,US-L0242,US,United States,2024-Q4,1001900,9,296000,Tom Gallagher,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1001900,1,,1,0,1,801520,4.4,,0
+C-076,US-L0367,US,United States,2024-Q4,1206000,12,190000,Marcus Lee,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1206000,1,,1,0,1,964800,2.4,,0
+C-077,US-L0468,US,United States,2025-Q1,851400,10,418000,Alicia Moreno,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,851400,1,,1,0,1,681120,7.4,,0
+C-078,US-L0033,US,United States,2025-Q3,1079500,11,252000,Ryan Okafor,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1079500,1,,1,0,1,863600,3.5,,0
+C-079,US-L0489,US,United States,2025-Q3,138400,12,266000,Marcus Lee,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,138400,1,,1,0,1,110720,28.8,,0
+C-080,US-L0217,US,United States,2025-Q4,1188700,13,290000,Ryan Okafor,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1188700,1,,1,0,1,950960,3.7,,0
+C-081,US-L0095,US,United States,2025-Q4,1349600,8,363000,Priya Raman,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1349600,1,,1,0,1,1079680,4,,0
+C-082,US-L0218,US,United States,2025-Q4,410900,6,274000,Alicia Moreno,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,410900,1,,1,0,1,328720,10,,0
+C-083,US-L0488,US,United States,2025-Q4,863500,11,225000,Lauren Fitch,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,863500,1,,1,0,1,690800,3.9,,0
+C-084,US-L0239,US,United States,2026-Q1,1517100,9,267000,Tom Gallagher,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1517100,1,,1,0,1,1213680,2.6,,0
+C-085,US-L0070,US,United States,2026-Q1,101700,8,297000,Dana Whitfield,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,101700,1,,1,0,1,81360,43.8,,0
+C-086,US-L0157,US,United States,2026-Q2,3404700,10,281000,Dana Whitfield,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,3404700,1,,1,0,1,2723760,1.2,,0
+C-087,US-L0373,US,United States,2026-Q2,1897100,8,296000,Dana Whitfield,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1897100,1,,1,0,1,1517680,2.3,,0
+C-088,US-L0256,US,United States,2026-Q2,419300,8,402000,Sam Delgado,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,419300,1,,1,0,1,335440,14.4,,0
+C-089,US-L0389,US,United States,2026-Q3,1484100,7,254000,Keisha Grant,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1484100,1,,1,0,1,1187280,2.6,,0
+C-090,US-L0195,US,United States,2026-Q3,1265400,5,288000,Keisha Grant,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,1265400,1,,1,0,1,1012320,3.4,,0
+C-091,EU-AT-L3424,EU,Austria,2023-Q4,102700,10,200000,Lena Vogt,MedCorp_Europe_Data_Pack_1.xlsx,Austria,EU,Active,102700,1,,1,0,1,82160,29.2,,0
+C-092,EU-AT-L3488,EU,Austria,2023-Q4,106000,12,308000,Lena Vogt,MedCorp_Europe_Data_Pack_1.xlsx,Austria,EU,Active,106000,1,,1,0,1,84800,43.6,,0
+C-093,EU-AT-L3508,EU,Austria,2025-Q3,98000,7,301000,Lena Vogt,MedCorp_Europe_Data_Pack_1.xlsx,Austria,EU,Active,98000,1,,1,0,1,78400,46.1,,0
+C-094,EU-FR-L0929,EU,France,2025-Q2,104000,12,175000,Camille Durand,MedCorp_Europe_Data_Pack_1.xlsx,France,EU,Active,104000,1,,1,0,1,83200,25.2,,0
+C-095,EU-FR-L1272,EU,France,2025-Q3,49500,9,160000,Camille Durand,MedCorp_Europe_Data_Pack_1.xlsx,France,EU,Active,49500,1,,1,0,1,39600,48.5,,0
+C-096,EU-FR-L1151,EU,France,2026-Q2,64400,12,223000,Camille Durand,MedCorp_Europe_Data_Pack_1.xlsx,France,EU,Active,64400,1,,1,0,1,51520,51.9,,0
+C-097,EU-FR-L1309,EU,France,2026-Q2,40800,11,328000,Camille Durand,MedCorp_Europe_Data_Pack_1.xlsx,France,EU,Active,40800,1,,1,0,1,32640,120.6,,0
+C-098,EU-FR-L1179,EU,France,2026-Q2,31300,10,245000,Camille Durand,MedCorp_Europe_Data_Pack_1.xlsx,France,EU,Active,31300,1,,1,0,1,25040,117.4,,0
+C-099,EU-DE-L0682,EU,Germany,2019-Q1,99700,11,293000,Lena Vogt,MedCorp_Europe_Data_Pack_1.xlsx,Germany,EU,Active,99700,1,,1,0,1,79760,44.1,,0
+C-100,EU-DE-L0147,EU,Germany,2019-Q3,69000,7,255000,Lena Vogt,MedCorp_Europe_Data_Pack_1.xlsx,Germany,EU,Active,69000,1,,1,0,1,55200,55.4,,0
+C-101,EU-DE-L0431,EU,Germany ,2021-Q1,132800,9,185000,Lena Vogt,MedCorp_Europe_Data_Pack_1.xlsx,Germany,EU,Active,132800,1,,1,0,1,106240,20.9,"Country mismatch: ""Germany """,1
+C-102,EU-DE-L0586,EU,Germany,2021-Q3,83000,10,214000,Lena Vogt,MedCorp_Europe_Data_Pack_1.xlsx,Germany,EU,Active,83000,1,,1,0,1,66400,38.7,,0
+C-103,EU-DE-L0869,EU,Germany,2022-Q4,49300,9,358000,Lena Vogt,MedCorp_Europe_Data_Pack_1.xlsx,Germany,EU,Active,49300,1,,1,0,1,39440,108.9,,0
+C-104,EU-DE-L0005,EU,Germany,2023-Q2,898400,11,389000,Lena Vogt,MedCorp_Europe_Data_Pack_1.xlsx,Germany,EU,Active,898400,1,,1,0,1,718720,6.5,,0
+C-105,EU-DE-L0193,EU,Germany,2024-Q3,63400,9,212000,Lena Vogt,MedCorp_Europe_Data_Pack_1.xlsx,Germany,EU,Active,63400,1,,1,0,1,50720,50.2,,0
+C-106,EU-DE-L0673,EU,Germany,2026-Q1,123700,11,237000,Lena Vogt,MedCorp_Europe_Data_Pack_1.xlsx,Germany,EU,Active,123700,1,,1,0,1,98960,28.7,,0
+C-107,EU-IT-L2304,EU,Italy,2022-Q2,135500,7,261000,Marco Bellini,MedCorp_Europe_Data_Pack_1.xlsx,Italy,EU,Active,135500,1,,1,0,1,108400,28.9,,0
+C-108,EU-IT-L2239,EU,Italy,2024-Q3,45400,8,240000,Marco Bellini,MedCorp_Europe_Data_Pack_1.xlsx,Italy,EU,Active,45400,1,,1,0,1,36320,79.3,,0
+C-109,EU-IT-L2219,EU,Italy,2024-Q4,112300,13,294000,Marco Bellini,MedCorp_Europe_Data_Pack_1.xlsx,Italy,EU,Active,112300,1,,1,0,1,89840,39.3,,0
+C-110,EU-NL-L3294,EU,The Netherlands,2022-Q1,95600,6,298000,Joost de Wit,MedCorp_Europe_Data_Pack_1.xlsx,Netherlands,EU,Active,95600,1,,1,0,1,76480,46.8,"Country mismatch: ""The Netherlands""",1
+C-111,EU-NL-L3250,EU,Netherlands,2024-Q4,169200,9,160000,Joost de Wit,MedCorp_Europe_Data_Pack_1.xlsx,Netherlands,EU,Active,169200,1,,1,0,1,135360,14.2,,0
+C-112,EU-NL-L3244,EU,Netherlands,2025-Q4,43000,7,320000,Joost de Wit,MedCorp_Europe_Data_Pack_1.xlsx,Netherlands,EU,Active,43000,1,,1,0,1,34400,111.6,,0
+C-113,EU-NO-L3724,EU,Norway,2025-Q3,42300,11,217000,Sofia Lindqvist,MedCorp_Europe_Data_Pack_1.xlsx,Norway,EU,Active,42300,1,,1,0,1,33840,77,,0
+C-114,EU-PT-L3864,EU,Portugal,2026-Q2,99100,8,308000,Camille Durand,MedCorp_Europe_Data_Pack_1.xlsx,Portugal,EU,Active,99100,1,,1,0,1,79280,46.6,,0
+C-115,EU-SE-L3673,EU,Sweden,2023-Q4,102500,9,332000,Sofia Lindqvist,MedCorp_Europe_Data_Pack_1.xlsx,Sweden,EU,Active,102500,1,,1,0,1,82000,48.6,,0
+C-116,EU-SE-L3689,EU,Sweden,2025-Q3,52400,8,208000,Sofia Lindqvist,MedCorp_Europe_Data_Pack_1.xlsx,Sweden,EU,Active,52400,1,,1,0,1,41920,59.5,,0
+C-117,EU-UK-L1661,EU,United Kingdom,2020-Q2,17900,8,216000,Oliver Pryce,MedCorp_Europe_Data_Pack_1.xlsx,United Kingdom,EU,Active,17900,1,,1,0,1,14320,181,,0
+C-118,EU-UK-L1937,EU,UK,2020-Q3,23100,8,160000,Oliver Pryce,MedCorp_Europe_Data_Pack_1.xlsx,United Kingdom,EU,Active,23100,1,,1,0,1,18480,103.9,"Country mismatch: ""UK""",1
+C-119,EU-UK-L1709,EU,United Kingdom,2021-Q4,26400,11,192000,Oliver Pryce,MedCorp_Europe_Data_Pack_1.xlsx,United Kingdom,EU,Active,26400,1,,1,0,1,21120,109.1,,0
+C-120,EU-UK-L1829,EU,United Kingdom,2024-Q2,136300,9,200000,Oliver Pryce,MedCorp_Europe_Data_Pack_1.xlsx,United Kingdom,EU,Active,136300,1,,1,0,1,109040,22,,0
+C-121,EU-UK-L1551,EU,United Kingdom,2025-Q3,932700,9,408000,Oliver Pryce,MedCorp_Europe_Data_Pack_1.xlsx,United Kingdom,EU,Active,932700,1,,1,0,1,746160,6.6,ARR jump 119% in 2026-Q2,1
+C-122,EU-UK-L1637,EU,UK,2026-Q3,75000,13,231000,Oliver Pryce,MedCorp_Europe_Data_Pack_1.xlsx,United Kingdom,EU,Active,75000,1,,1,0,1,60000,46.2,"Country mismatch: ""UK""",1
+C-123,EU-FR-L1272,EU,France,2025-Q3,49500,9,160000,Camille Durand,MedCorp_Europe_Data_Pack_1.xlsx,France,EU,Active,49500,0,Duplicate of C-095,0,0,0,,,,0
+C-124,US-L0352,US,United States,2021-Q4,2957100,11,289000,Alicia Moreno,MedCorp_Europe_Data_Pack_1.xlsx,United States,US,Active,2957100,0,Duplicate of C-030,0,0,0,,,,0
+C-125,TEST-0001,EU,Germany,2026-Q3,1,1,0,QA Test (do not use),MedCorp_Europe_Data_Pack_1.xlsx,Germany,EU,Active,,0,Logo not in master,0,0,0,,,Suspicious value; No billing record,2
