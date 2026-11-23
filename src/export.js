@@ -20,10 +20,11 @@ const SHEET_MAP = {
   logos: 'logos',
   country_costs: 'country_costs',
   plan: 'plan',
+  hospitals: 'hospitals',
 };
 
 function loadRaw() {
-  const raw = { customers: [], quarterly_arr: [], logos: [], country_costs: [], plan: [] };
+  const raw = { customers: [], quarterly_arr: [], logos: [], country_costs: [], plan: [], hospitals: [] };
   const files = fs.readdirSync(RAW).filter((f) => /\.xlsx$/i.test(f) && !f.startsWith('~$')).sort();
   for (const file of files) {
     const wb = XLSX.readFile(path.join(RAW, file));

@@ -252,10 +252,14 @@
     const cleanCust = cleanCustomers(customers, ctx);
     const cleanArr = cleanQuarterlyArr(quarterlyArr, ctx, cleanCust);
     const perBed = arrPerBed(cleanCust, ctx.logosById);
+    const cleanLog = cleanLogos(raw.logos || [], ctx, cleanCust, perBed);
+    const statusByLogo = Object.fromEntries(cleanLog.map((l) => [l.logo_id, l.logo_status]));
     const tables = {
       customers: cleanCust,
       quarterly_arr: cleanArr,
-      logos: cleanLogos(raw.logos || [], ctx, cleanCust, perBed),
+      logos: cleanLog,
+      // hospitals: as received (validated against logos totals), plus the owner's logo_status
+      hospitals: (raw.hospitals || []).map((h) => ({ ...h, logo_status: statusByLogo[h.logo_id] || 'Unknown' })),
       country_costs: countryCosts,
       plan: cleanPlan(raw.plan || [], ctx, cleanCust, cleanArr),
       metric_exclusions: metricExclusions(cleanCust),
