@@ -666,7 +666,7 @@ function countryCard(eu) {
     </div>
     <div class="cx-stats">
       <div><div class="label">Fixed country cost, a year</div><div class="cx-num">${usdRound(fixed)}</div></div>
-      <div><div class="label">Europe after fixed cost</div><div class="cx-num ${eu.total_contribution < 0 ? 'neg' : ''}">${eu.total_contribution < 0 ? '−' : '+'}${usdK(Math.abs(eu.total_contribution))}</div></div>
+      <div><div class="label" data-tip="${esc('Sum of country contribution (ARR × 80% − fixed in-country cost) across the ' + n + ' operating countries, a year. Customers in non-operating countries are not included.')}">Operating countries contribution</div><div class="cx-num ${eu.total_contribution < 0 ? 'neg' : ''}">${eu.total_contribution < 0 ? '−' : '+'}${usdK(Math.abs(eu.total_contribution))}</div></div>
     </div>`;
 }
 
