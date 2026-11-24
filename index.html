@@ -188,7 +188,8 @@ body { margin: 0; background: var(--page); color: var(--ink); font: 14px/1.45 In
 .pb-note { margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-2); line-height: 1.5; }
 .pb-note b { color: var(--ink); font-weight: 600; }
 .pb-foot { margin-top: auto; padding-top: 14px; display: flex; justify-content: flex-end; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
-@media (max-width: 1100px) { .ue-row, .opp-row, .pr-row, .cv-grid { grid-template-columns: 1fr; } }
+@media (max-width: 1100px) { .tiles .tile .body.has-spark { grid-template-columns: 1fr; min-height: 0; } .tiles .tile .body.has-spark .spark-host { min-height: 120px; } .tiles .goal { max-width: none; }
+  .ue-row, .opp-row, .pr-row, .cv-grid { grid-template-columns: 1fr; } }
 @media (max-width: 900px) { .ue-grid { grid-template-columns: 0 1fr 80px 80px 0 90px; column-gap: 10px; } .ue-step, .ue-viz { display: none; } .pb-row { grid-template-columns: 1fr; } }
 .page-head .context { font-size: 13.5px; }
 .tiles { display: grid; grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr)); gap: 14px 28px; }
@@ -435,9 +436,9 @@ function spark(points, fmt, type) {
   return '<div class="spark-host" data-i="' + (SPARKS.length - 1) + '"></div>';
 }
 function sparkSvg({ points, fmt, type }, W, H, baseY, labelY) {
-  const LY = labelY && labelY < H ? labelY : H - 3; // date labels share the baseline of the text under the plan bar
+  const LY = labelY && labelY > 60 && labelY < H ? labelY : H - 3; // date labels share the baseline of the text under the plan bar
   // baseY: where the lowest value sits (aligned with the plan bar); dates go below it
-  const L = 6, R = 6, T = 24, B = baseY && baseY < H - 16 ? H - baseY : 18;
+  const L = 6, R = 6, T = 24, B = baseY && baseY > 60 && baseY < H - 16 ? H - baseY : 18;
   const vals = points.flatMap((p) => (p.plan ? [p.value, p.plan] : [p.value])), max = Math.max(...vals), min = Math.min(...vals);
   const planColor = '#b9bdcb';
   const tipOf = (p) => esc('<b>' + p.label + '</b><br>' + fmt(p.value) + (p.plan ? '<br>Plan ' + fmt(p.plan) + ' · ' + Math.round((p.value / p.plan) * 100) + '% of plan' : ''));
@@ -486,10 +487,12 @@ function drawSparks() {
     const r = h.getBoundingClientRect();
     if (!(r.width > 0 && r.height > 0)) return;
     // Align the lowest point with the plan bar of this row (if the row has one)
-    const row = h.closest('.tiles');
-    const track = row ? row.querySelector('.track') : null;
+    // Align only with a plan bar in the same visual row (cards wrap to 2 columns on narrow screens)
+    const row = h.closest('.tiles'), tile = h.closest('.tile');
+    const sameRow = (el) => Math.abs(el.closest('.tile').getBoundingClientRect().top - tile.getBoundingClientRect().top) < 4;
+    const track = row ? [...row.querySelectorAll('.track')].find(sameRow) : null;
     const baseY = track ? Math.round(track.getBoundingClientRect().top + track.offsetHeight / 2 - r.top) : undefined;
-    const gt = row ? row.querySelector('.goal-text') : null;
+    const gt = row ? [...row.querySelectorAll('.goal-text')].find(sameRow) : null;
     const labelY = gt ? Math.round(gt.getBoundingClientRect().bottom - 4 - r.top) : undefined;
     h.innerHTML = sparkSvg(SPARKS[+h.dataset.i], Math.floor(r.width), Math.floor(r.height), baseY, labelY);
   });
