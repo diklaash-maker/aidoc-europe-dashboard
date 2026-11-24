@@ -230,6 +230,126 @@
     return out;
   }
 
+  // ---------- loading (shared by export.js and the dashboard) ----------
+  // Sheet name in the source files -> raw table name
+  const SHEET_MAP = {
+    customers: 'customers', customers_new: 'customers', quarterly_arr: 'quarterly_arr',
+    logos: 'logos', hospitals: 'hospitals', country_costs: 'country_costs', plan: 'plan', eu_proposal: 'eu_proposal',
+  };
+  function emptyRaw() {
+    return { customers: [], quarterly_arr: [], logos: [], hospitals: [], country_costs: [], plan: [], eu_proposal: [] };
+  }
+  // eu_proposal is a label / value sheet, not a table: read it as rows
+  const ROW_SHEETS = new Set(['eu_proposal']);
+  function parseProposal(rows) {
+    const find = (re) => { const r = rows.find((x) => re.test(String(x[0] || ''))); return r ? r[1] : ''; };
+    const countriesRow = rows.find((x) => /new countries/i.test(String(x[0] || '')));
+    return {
+      investment: find(/^Total incremental investment/i),
+      headcount: find(/headcount/i),
+      // "+10 account executives, +4 solutions engineers" -> 14
+      headcount_people: ((rows.find((x) => /headcount/i.test(String(x[0] || ''))) || [])[2] || '').toString().match(/\+\d+/g)?.reduce((s, n) => s + +n, 0) || '',
+      new_countries_cost: find(/new countries/i),
+      marketing: find(/Marketing/i),
+      new_countries: countriesRow ? String(countriesRow[2]).split(/[—-]/)[0].split(',').map((s) => s.trim()).filter(Boolean) : [],
+      new_logos: find(/^New EU logos/i),
+      arr_per_new_logo: find(/^Assumed average ARR/i),
+      projected_arr: find(/^Projected new ARR/i),
+      claimed_payback: find(/^Claimed payback/i),
+    };
+  }
+  // Append one workbook's tables to raw. XLSX = the SheetJS library
+  function addWorkbook(raw, XLSX, wb, fileName) {
+    const found = [];
+    for (const sheet of wb.SheetNames) {
+      const table = SHEET_MAP[sheet];
+      if (!table) continue;
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheet], ROW_SHEETS.has(table) ? { header: 1, defval: '' } : { defval: '' });
+      if (table === 'customers') rows.forEach((r) => (r.customer_source_file = fileName));
+      raw[table].push(...rows);
+      found.push(sheet + ' (' + rows.length + ')');
+    }
+    return found;
+  }
+
+  // ---------- metrics (the numbers the dashboard shows) ----------
+  const median = (a) => {
+    if (!a.length) return '';
+    const s = [...a].sort((x, y) => x - y), m = s.length / 2;
+    return s.length % 2 ? s[Math.floor(m)] : (s[m - 1] + s[m]) / 2;
+  };
+  const sum = (a) => a.reduce((x, y) => x + y, 0);
+  const shiftQuarter = (q, years) => (+q.slice(0, 4) + years) + q.slice(4);
+
+  function regionMetrics(tables, through, region, perBed) {
+    const cust = tables.customers.filter((c) => c.region_clean === region);
+    const active = cust.filter((c) => c.is_currently_active_customer);
+    const arrIn = (q) => sum(tables.quarterly_arr.filter((r) => r.is_valid_customer && r.region === region && r.quarter === q).map((r) => r.arr_usd));
+    const year = through.slice(0, 4);
+    const planRows = tables.plan.filter((p) => p.region === region);
+    const planNow = planRows.find((p) => p.quarter === through);
+    const paybacks = active.filter((c) => c.payback_months !== '').map((c) => c.payback_months);
+    const aggPayback = (list) => sum(list.map((c) => c.cac_usd)) / (sum(list.map((c) => c.current_arr_usd)) * GROSS_MARGIN / 12);
+
+    const currentArr = sum(active.map((c) => c.current_arr_usd));
+    const lastYearArr = arrIn(shiftQuarter(through, -1));
+    const quarters = [...new Set(tables.quarterly_arr.map((r) => r.quarter))].sort();
+    const byYear = {};
+    for (const c of cust) if (c.is_valid_customer) byYear[c.signed_quarter.slice(0, 4)] = (byYear[c.signed_quarter.slice(0, 4)] || 0) + 1;
+
+    // Country contribution (assumptions): country ARR x 80% - fixed cost, active markets only (C-07)
+    const contribution = tables.country_costs
+      .filter((k) => k.region === region && k.status === 'Active')
+      .map((k) => {
+        const arr = sum(active.filter((c) => c.is_in_contribution && c.country_clean === k.country).map((c) => c.current_arr_usd));
+        return { country: k.country, arr, gross_profit: arr * GROSS_MARGIN, fixed_cost: k.annual_fixed_cost_usd, contribution: arr * GROSS_MARGIN - k.annual_fixed_cost_usd };
+      })
+      .sort((a, b) => b.contribution - a.contribution);
+
+    // Largest two customers, for the payback bridge
+    const top2 = [...active].sort((a, b) => b.current_arr_usd - a.current_arr_usd).slice(0, 2);
+    const rest = active.filter((c) => !top2.includes(c));
+
+    return {
+      region,
+      current_arr: currentArr,
+      arr_added_12m: currentArr - lastYearArr,
+      yoy_growth: lastYearArr ? currentArr / lastYearArr - 1 : '',
+      active_customers: active.length,
+      churned_customers: cust.filter((c) => c.is_churned_customer).length,
+      new_customers_ytd: cust.filter((c) => c.is_valid_customer && c.signed_quarter.slice(0, 4) === year).length,
+      // Same period last year (Q1 up to the same quarter)
+      new_customers_prev_ytd: cust.filter((c) => c.is_valid_customer && c.signed_quarter.slice(0, 4) === String(+year - 1) && c.signed_quarter.slice(5) <= through.slice(5)).length,
+      new_customers_plan_year: sum(planRows.filter((p) => p.quarter.slice(0, 4) === year).map((p) => p.new_customers_plan)),
+      new_customers_plan_ytd: sum(planRows.filter((p) => p.quarter.slice(0, 4) === year && p.quarter <= through).map((p) => p.new_customers_plan)),
+      arr_plan: planNow ? planNow.arr_plan_usd : '',
+      arr_attainment: planNow ? planNow.arr_attainment : '',
+      median_arr_per_customer: median(active.map((c) => c.current_arr_usd)),
+      median_beds_per_customer: median(active.map((c) => tables.logos.find((l) => l.logo_id === c.logo_id).total_beds)),
+      median_hospitals_per_customer: median(active.map((c) => tables.logos.find((l) => l.logo_id === c.logo_id).n_hospitals)),
+      // Customers signed in the last two calendar years (the "recent deals" the proposal refers to)
+      median_arr_recent: median(active.filter((c) => c.signed_quarter.slice(0, 4) >= String(+year - 1)).map((c) => c.current_arr_usd)),
+      recent_customers: active.filter((c) => c.signed_quarter.slice(0, 4) >= String(+year - 1)).length,
+      arr_per_bed: perBed[region] || '',
+      median_cac: median(active.map((c) => c.cac_usd)),
+      median_payback: median(paybacks),
+      aggregate_payback: active.length ? aggPayback(active) : '',
+      payback_over_contract: paybacks.filter((p) => p > 36).length,
+      bridge: {
+        top2: top2.map((c) => ({ logo_id: c.logo_id, country: c.country_clean, arr: c.current_arr_usd, payback: c.payback_months })),
+        top2_arr_share: currentArr ? sum(top2.map((c) => c.current_arr_usd)) / currentArr : '',
+        top2_cac_share: sum(active.map((c) => c.cac_usd)) ? sum(top2.map((c) => c.cac_usd)) / sum(active.map((c) => c.cac_usd)) : '',
+        aggregate_without_top2: rest.length ? aggPayback(rest) : '',
+      },
+      contribution,
+      countries_covering_cost: contribution.filter((k) => k.contribution >= 0).length,
+      total_contribution: sum(contribution.map((k) => k.contribution)),
+      arr_by_quarter: quarters.map((q) => ({ quarter: q, arr: arrIn(q), plan: (planRows.find((p) => p.quarter === q) || {}).arr_plan_usd || '' })),
+      active_by_quarter: quarters.map((q) => ({ quarter: q, count: new Set(tables.quarterly_arr.filter((r) => r.is_valid_customer && r.region === region && r.quarter === q && r.arr_usd > 0).map((r) => r.logo_id)).size })),
+      new_customers_by_year: Object.keys(byYear).sort().map((y) => ({ year: y, count: byYear[y], partial: y === year && through.slice(5) !== 'Q4' })),
+    };
+  }
+
   // ---------- run ----------
   function run(raw, opts = {}) {
     const countryCosts = cleanCountryCosts(raw.country_costs || []);
@@ -264,7 +384,8 @@
       plan: cleanPlan(raw.plan || [], ctx, cleanCust, cleanArr),
       metric_exclusions: metricExclusions(cleanCust),
     };
-    return { data_through: through, tables, summary: summarize(tables, through, perBed) };
+    const metrics = { EU: regionMetrics(tables, through, 'EU', perBed), US: regionMetrics(tables, through, 'US', perBed) };
+    return { data_through: through, tables, metrics, proposal: parseProposal(raw.eu_proposal || []), summary: summarize(tables, through, perBed) };
   }
 
   // Quick numbers to check the output against known values
@@ -296,5 +417,5 @@
     return out;
   }
 
-  return { run, GROSS_MARGIN };
+  return { run, emptyRaw, addWorkbook, GROSS_MARGIN };
 });

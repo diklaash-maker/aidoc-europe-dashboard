@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 178 40" role="img" aria-label="MedCorp">
+  <!-- Mark: teal rounded square with a plus and a pulse line (fictional company) -->
+  <rect x="0" y="2" width="36" height="36" rx="9" fill="#3fa38c"/>
+  <path d="M15 9h6v8h8v6h-8v8h-6v-8H7v-6h8z" fill="#ffffff" opacity="0.22"/>
+  <path d="M5 21h7l3-7 5 14 3-7h8" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Wordmark -->
+  <text x="46" y="29" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="25" font-weight="700" letter-spacing="-0.5" fill="#ffffff">med<tspan font-weight="400">corp</tspan></text>
+</svg>

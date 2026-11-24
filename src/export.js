@@ -12,30 +12,12 @@ const Pipeline = require('./pipeline');
 const ROOT = path.join(__dirname, '..');
 const RAW = path.join(ROOT, 'data', 'raw');
 
-// Sheet name in the source files -> raw table name in the pipeline
-const SHEET_MAP = {
-  customers: 'customers',
-  customers_new: 'customers',
-  quarterly_arr: 'quarterly_arr',
-  logos: 'logos',
-  country_costs: 'country_costs',
-  plan: 'plan',
-  hospitals: 'hospitals',
-};
-
 function loadRaw() {
-  const raw = { customers: [], quarterly_arr: [], logos: [], country_costs: [], plan: [], hospitals: [] };
+  const raw = Pipeline.emptyRaw();
   const files = fs.readdirSync(RAW).filter((f) => /\.xlsx$/i.test(f) && !f.startsWith('~$')).sort();
   for (const file of files) {
-    const wb = XLSX.readFile(path.join(RAW, file));
-    for (const sheet of wb.SheetNames) {
-      const table = SHEET_MAP[sheet];
-      if (!table) continue;
-      const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheet], { defval: '' });
-      if (table === 'customers') rows.forEach((r) => (r.customer_source_file = file));
-      raw[table].push(...rows);
-    }
-    console.log('loaded', file);
+    const found = Pipeline.addWorkbook(raw, XLSX, XLSX.readFile(path.join(RAW, file)), file);
+    console.log('loaded', file, '->', found.join(', '));
   }
   return raw;
 }
@@ -62,3 +44,9 @@ for (const [name, rows] of Object.entries(result.tables)) {
   console.log('wrote', path.relative(ROOT, path.join(outDir, name + '.csv')), rows.length, 'rows');
 }
 console.log(JSON.stringify(result.summary, null, 2));
+if (args.includes('--metrics')) {
+  for (const r of ['EU', 'US']) {
+    const { arr_by_quarter, new_customers_by_year, ...m } = result.metrics[r];
+    console.log(r, JSON.stringify(m, null, 1));
+  }
+}

@@ -1,0 +1,890 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>MedCorp Europe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Always light. Palette: deep navy band, white content, one blue accent, soft status pills */
+:root {
+  color-scheme: light only;
+  --navy: #161a54; --navy-2: #232a7c;
+  --page: #eef0f5; --card: #ffffff; --soft: #f6f7fb;
+  --ink: #1d2140; --ink-2: #4b5068; --muted: #7c8297;
+  --line: #e7e9f0; --grid: #eceef4; --axis: #c9cddb;
+  --blue: #2c55d6; --blue-soft: #a9bbf0; --blue-tint: #e6ecfc;
+  --teal: #3fa38c; --teal-tint: #e0f3ee; --teal-ink: #2a8771;
+  --orange: #ee6c2c; --orange-tint: #fdecdc; --orange-ink: #c9601b;
+  --plan: #7c8297;
+  --shadow: 0 2px 12px rgba(22, 26, 84, .07);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 14px/1.45 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+
+/* Navy band with fine diagonal lines */
+.band { background:
+    repeating-linear-gradient(135deg, rgba(255,255,255,.045) 0 1px, transparent 1px 22px),
+    linear-gradient(100deg, var(--navy) 0%, var(--navy-2) 100%);
+  color: #fff; }
+.band .inner { max-width: none; margin: 0 auto; padding: 22px 16px; display: flex; align-items: center; flex-wrap: wrap; gap: 12px 18px; }
+.band .logo { height: 34px; width: auto; display: block; }
+.band .divider { width: 1px; height: 26px; background: rgba(255,255,255,.25); }
+.band h1 { margin: 0; font-size: 17px; font-weight: 500; letter-spacing: .01em; color: rgba(255,255,255,.92); }
+.band .spacer { flex: 1; }
+.band .btn { font: inherit; font-size: 13px; font-weight: 500; color: #fff; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.28); border-radius: 8px; padding: 7px 13px; cursor: pointer; }
+.band .btn:hover { background: rgba(255,255,255,.16); }
+
+/* Tabs */
+.tabs-wrap { border-bottom: 1px solid var(--line); background: #ffffff; }
+.tabs { max-width: none; margin: 0 auto; padding: 0 16px; display: flex; gap: 28px; }
+.tab { font: inherit; font-size: 15px; font-weight: 500; color: var(--ink); background: none; border: 0; padding: 16px 2px 13px; border-bottom: 3px solid transparent; cursor: pointer; }
+.tab[aria-selected="true"] { color: var(--blue); border-bottom-color: var(--blue); }
+.tab .count { font-size: 12px; color: var(--orange-ink); background: var(--orange-tint); border-radius: 10px; padding: 1px 7px; margin-left: 6px; }
+
+.wrap { max-width: none; margin: 0 auto; padding: 22px 16px 56px; }
+.page-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; margin-bottom: 6px; }
+.page-sub { margin: 0 0 14px; color: var(--ink-2); font-size: 15px; }
+.purpose { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 0; background: var(--soft); border-radius: 10px; margin-bottom: 26px; }
+.purpose > div { padding: 12px 16px; border-left: 1px solid var(--line); }
+.purpose > div:first-child { border-left: 0; }
+.purpose p { margin: 4px 0 0; font-size: 13px; color: var(--ink); }
+.purpose p b { font-weight: 600; }
+@media (max-width: 760px) { .purpose { grid-template-columns: 1fr; } .purpose > div { border-left: 0; border-top: 1px solid var(--line); } .purpose > div:first-child { border-top: 0; } }
+.page-head h2 { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -.01em; }
+.page-head .context { color: var(--ink-2); font-size: 13px; }
+.page-head .context b { color: var(--ink); font-weight: 600; }
+
+.label { font-size: 11px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; }
+.section-title { margin: 30px 0 12px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); padding: 18px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 12px; color: var(--ink-2); margin-bottom: 12px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+
+/* KPI tiles: fixed slots so values, comparisons and text line up across cards */
+.group { margin-bottom: 26px; }
+.group-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-bottom: 12px; }
+.group-head h3 { margin: 0; font-size: 19px; font-weight: 600; }
+.group-head span { color: var(--ink-2); font-size: 13px; }
+.group-head { margin-bottom: 18px; }
+.tiles { grid-template-rows: auto auto; }
+.cell { display: grid; grid-row: span 2; grid-template-rows: subgrid; row-gap: 10px; min-width: 0; }
+.summary { margin: 0; align-self: start; padding: 0 17px; }
+.summary .headline { margin: 0; font-size: 14px; font-weight: 600; color: var(--ink); }
+.summary .facts { margin: 3px 0 0; font-size: 12.5px; color: var(--ink-2); }
+.sep { color: var(--axis); margin: 0 8px; }
+/* Unit economics table */
+.ue-summary { padding: 0 17px; margin-bottom: 10px; }
+.ue-summary .headline { margin: 0; font-size: 14px; font-weight: 600; }
+.ue-summary .facts { margin: 3px 0 0; font-size: 12.5px; color: var(--ink-2); }
+.ue-card { padding: 6px 16px 10px; }
+.ue-grid { display: grid; grid-template-columns: 84px minmax(150px, 1.3fr) 84px 84px minmax(120px, 2.4fr) 92px; align-items: center; column-gap: 16px; }
+.ue-grid > div { padding: 14px 0; border-bottom: 1px solid var(--line); }
+.ue-grid > div:nth-last-child(-n+6) { border-bottom: 0; }
+.ue-h { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; padding: 12px 0 10px !important; }
+.ue-h .dot, .dot { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; vertical-align: 0; }
+.dot.eu { background: var(--blue); } .dot.us { background: #b9bdcb; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+.ue-step { font-size: 11px; font-weight: 600; color: var(--blue); text-transform: uppercase; letter-spacing: .07em; }
+.ue-label { font-size: 14px; font-weight: 500; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+.ue-v { font-size: 16px; font-weight: 600; }
+.ue-v.us { color: var(--ink-2); font-weight: 500; }
+.ue-cmp { font-size: 14px; font-weight: 600; color: var(--ink); }
+.ue-bars { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 6px 0; }
+.ue-bar { height: 10px; border-radius: 0 4px 4px 0; min-width: 2px; }
+.ue-bar.eu { background: var(--blue); }
+.ue-bar.us { background: #b9bdcb; }
+.ue-contract { position: absolute; top: -6px; bottom: -6px; width: 0; border-left: 1.5px solid var(--orange); }
+.ue-contract em { position: absolute; top: -12px; left: 4px; font-style: normal; font-size: 10.5px; color: var(--orange-ink); white-space: nowrap; }
+.pb-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.pr-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+.pr-cases { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; padding-top: 14px; }
+.pr-case { font-size: 13px; font-weight: 600; color: var(--ink); }
+.pr-cases p { margin: 4px 0 0; font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }
+.mk-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.mk-stats .cx-num { font-size: 30px; }
+.link-btn { margin-top: auto; align-self: flex-start; background: none; border: 0; padding: 14px 0 0; font: inherit; font-size: 13px; font-weight: 500; color: var(--blue); cursor: pointer; }
+.link-btn:hover { text-decoration: underline; }
+#marketCard h4 { display: flex; align-items: center; gap: 8px; }
+.pr-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: stretch; }
+.pr-top { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--line); margin-bottom: 6px; }
+.pr-lead { margin: -6px 0 14px; font-size: 13px; color: var(--ink-2); }
+.pr-table td:first-child { color: var(--ink-2); }
+.pr-table td.gapc { color: var(--orange-ink); font-weight: 600; }
+.pr-new { margin-top: 14px; }
+.pr-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.pr-chips span { font-size: 12.5px; background: var(--soft); border-radius: 6px; padding: 4px 10px; color: var(--ink-2); }
+.pr-chips b { color: var(--ink); margin-left: 4px; }
+.cv-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.cv-head h4 { margin: 0 !important; }
+.cv-head select { font: inherit; font-size: 13px; padding: 7px 12px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); min-width: 220px; }
+.cv-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: 32px; }
+.cv-sub { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 10px; }
+.cv-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+#oppCard .cv-title { margin: 0; font-size: 20px; font-weight: 600; color: var(--ink); }
+.cv-country { color: var(--blue); font-weight: 700; }
+#oppCard .cv-next { font-size: 17px; margin: 30px 0 12px; }
+@media (max-width: 700px) { .cv-stats { grid-template-columns: 1fr 1fr; } }
+.cv-stats > div { background: var(--card); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); padding: 16px 18px; }
+#oppCard .cv-stats .cv-num { font-size: 28px; }
+.op-card { padding: 8px 18px 14px; }
+.cv-stats > div { display: flex; flex-direction: column; }
+.cv-spark { margin-top: auto; padding-top: 10px; display: flex; }
+.cv-spark .spark-host { min-height: 78px; }
+.cv-bridge { margin-top: auto; padding-top: 12px; display: grid; gap: 6px; font-size: 12.5px; color: var(--ink-2); }
+.cv-bridge div { display: flex; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 6px; }
+.cv-bridge b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.cv-lead { margin: -6px 0 12px; font-size: 13.5px; color: var(--ink-2); }
+.cv-d b { color: var(--ink); font-weight: 600; }
+.cv-pick { display: flex; align-items: center; gap: 10px; margin: 0 0 18px; }
+.cv-pick select { font: inherit; font-size: 14px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); min-width: 240px; }
+.cv-num { font-size: 24px; font-weight: 600; margin-top: 6px; }
+.cv-num.neg { color: var(--orange-ink); } .cv-num.pos { color: var(--teal-ink); }
+.cv-d { font-size: 12px; color: var(--ink-2); margin-top: 4px; }
+.cv-d .chip { background: var(--soft); }
+.opp-row { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 28px; align-items: stretch; }
+#countryCard { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "a s" "b b"; align-items: center; column-gap: 28px; row-gap: 14px; padding: 16px 22px; }
+#countryCard .cx-a { grid-area: a; } #countryCard .cx-b { grid-area: b; } #countryCard .cx-stats { grid-area: s; }
+#countryCard .cx-head { white-space: nowrap; }
+#countryCard h4 { margin: 0 0 6px; display: flex; align-items: center; gap: 8px; }
+#countryCard .cx-head { justify-content: flex-start; }
+#countryCard .cx-segs { margin-top: 0; }
+#countryCard .cx-stats { margin: 0; padding: 0 0 0 28px; border-top: 0; border-left: 1px solid var(--line); gap: 32px; }
+#countryCard .cx-stats .cx-num { margin-top: 4px; }
+@media (max-width: 700px) { #countryCard { grid-template-columns: 1fr; grid-template-areas: "a" "s" "b"; } #countryCard .cx-stats { padding: 14px 0 0; border-left: 0; border-top: 1px solid var(--line); } }
+.cx-card { padding: 18px 20px; display: flex; flex-direction: column; }
+.cx-card h4 { margin: 0 0 14px; font-size: 15px; font-weight: 600; }
+.cx-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.cx-big { font-size: 30px; font-weight: 600; } .cx-big small { font-size: 16px; color: var(--ink-2); font-weight: 500; }
+.cx-cap { font-size: 13px; color: var(--ink-2); }
+.cx-segs { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 6px; margin-top: 12px; }
+.cx-segs span { height: 22px; border-radius: 5px; cursor: default; }
+.cx-segs .ok, .cx-legend .ok::before { background: #3fa38c; } .cx-segs .no, .cx-legend .no::before { background: #e3967b; }
+.cx-legend { display: flex; justify-content: space-between; margin-top: 8px; font-size: 12.5px; color: var(--ink-2); }
+.cx-legend span::before { content: ''; display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; }
+.cx-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+.cx-num { font-size: 24px; font-weight: 600; margin-top: 6px; } .cx-num.big { font-size: 32px; } .cx-num.neg { color: var(--orange-ink); } .cx-num.ok { color: var(--teal-ink); }
+.cx-note { margin: auto 0 0; padding-top: 14px; font-size: 11.5px; color: var(--muted); }
+.op-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+.op-pair .d { font-size: 12.5px; color: var(--ink-2); margin-top: 2px; }
+.op-pick { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 14px 0 8px; }
+.op-pick select { font: inherit; font-size: 13px; padding: 7px 12px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); min-width: 220px; }
+.op-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.op-table th { text-align: left; font-size: 10.5px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; padding: 6px 6px; border-bottom: 1px solid var(--line); }
+.op-table td { padding: 7px 6px; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.op-table th.num, .op-table td.num { text-align: right; }
+.op-table tr.big td:first-child { font-weight: 600; color: var(--blue); }
+.op-table td.okc { color: var(--teal-ink); font-weight: 600; }
+.ue-row { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 28px; align-items: stretch; }
+.pb-card { display: flex; flex-direction: column; padding: 18px 20px; }
+.pb-card h4 { margin: 0 0 14px; font-size: 15px; font-weight: 600; }
+.pb-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.pb-pair .v { font-size: 34px; font-weight: 600; letter-spacing: -.01em; margin: 8px 0 4px; line-height: 1.1; }
+.pb-pair .v small { font-size: 14px; font-weight: 500; color: var(--ink-2); margin-left: 4px; }
+.pb-pair .v.warn { color: var(--orange-ink); }
+.pb-pair .d { font-size: 12.5px; color: var(--ink-2); }
+.pb-note { margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+.pb-note b { color: var(--ink); font-weight: 600; }
+.pb-foot { margin-top: auto; padding-top: 14px; display: flex; justify-content: flex-end; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+@media (max-width: 1100px) { .ue-row, .opp-row, .pr-row, .cv-grid { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .ue-grid { grid-template-columns: 0 1fr 80px 80px 0 90px; column-gap: 10px; } .ue-step, .ue-viz { display: none; } .pb-row { grid-template-columns: 1fr; } }
+.page-head .context { font-size: 13.5px; }
+.tiles { display: grid; grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr)); gap: 14px 28px; }
+.tile { background: var(--card); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); padding: 14px 16px 12px; min-width: 0; display: flex; flex-direction: column; }
+.tile .top { height: 18px; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+.tile .top .label { font-size: 12.5px; font-weight: 700; color: var(--ink-2); letter-spacing: .06em; }
+.tile .value { height: 40px; display: flex; align-items: flex-end; font-size: 28px; font-weight: 600; letter-spacing: -.01em; line-height: 1; white-space: nowrap; }
+.tile .value small { font-size: 13px; font-weight: 500; color: var(--ink-2); margin-left: 5px; letter-spacing: 0; }
+.tile .chips { height: 82px; margin-top: 10px; display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
+.chip { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; color: var(--ink-2); background: var(--soft); border-radius: 5px; padding: 2px 8px; white-space: nowrap; }
+.goal { width: 100%; max-width: 210px; margin-top: 2px; cursor: default; }
+.goal-text { font-size: 11.5px; color: var(--ink-2); display: flex; justify-content: flex-end; margin-top: 7px; white-space: nowrap; }
+.goal .gap { font-size: 12.5px; font-weight: 700; white-space: nowrap; height: 0; position: relative; top: 2px; }
+.goal .gap.bad { color: #c93c3c; }
+.goal .gap.good { color: #1f9d55; }
+.goal-text .abs { color: var(--muted); margin-left: 4px; }
+.track { position: relative; height: 9px; background: #e8eaf1; border-radius: 5px; margin-top: 20px; }
+.track .fill { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(90deg, var(--blue-soft), var(--blue)); border-radius: 3px; }
+.track .knob { position: absolute; top: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; background: var(--blue); border: 2px solid #fff; border-radius: 50%; box-shadow: 0 0 0 1px rgba(44,85,214,.25); }
+.track .knob .pct { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); font-size: 11.5px; font-weight: 600; color: var(--blue); white-space: nowrap; }
+.chip .arr { font-size: 10px; }
+.chip .arr.good { color: #1f9d55; }
+.chip .arr.bad { color: #d64545; }
+.chip .abs { color: var(--muted); font-weight: 400; }
+.chip.warn { background: var(--orange-tint); color: var(--orange-ink); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; font-size: 10.5px; }
+.chip.ok { background: var(--teal-tint); color: var(--teal-ink); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; font-size: 10.5px; }
+.tile .body { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.tile .body.has-spark { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 32px; align-items: stretch; }
+.tile .spark-slot { min-width: 0; display: flex; }
+.tile .body.has-spark { min-height: 210px; }
+.tile .body.has-spark .main { display: flex; flex-direction: column; }
+.tile .body.has-spark .chips { margin-top: 18px; flex: 1; height: auto; }
+.tile .body.has-spark .chips .goal { margin-top: auto; }
+.spark-host { flex: 1; min-width: 0; min-height: 110px; position: relative; }
+.spark-host > svg { position: absolute; left: 0; top: 0; }
+.spark text { font-family: inherit; }
+.spark .sv { font-size: 11px; fill: var(--ink-2); }
+.spark .sv.strong { fill: var(--ink); font-weight: 600; }
+.spark .sl { font-size: 10px; fill: var(--muted); }
+.tiles.no-chips .chips { display: none; }
+.tiles.no-spark .chips { height: auto; min-height: 22px; }
+.spark { display: block; overflow: visible; }
+.tile .foot { flex: 1; display: flex; flex-direction: column; margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 12px; color: var(--ink-2); }
+.tile .foot .ref { min-height: 32px; margin-top: auto; padding-top: 18px; color: var(--muted); font-size: 11.5px; }
+.tile .foot .ref b { color: var(--ink-2); font-weight: 600; }
+.tile .foot .us { align-items: flex-start !important; margin-top: 0; display: flex; gap: 6px; align-items: baseline; }
+.tile .foot .us b { color: var(--ink); font-weight: 600; }
+.us-body { display: flex; flex-direction: column; gap: 10px; }
+.us-body b small { font-weight: 500; color: var(--ink-2); font-size: 12px; }
+.us-chips { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.us-chips .chip { font-size: 11.5px; }
+.tile .foot .us > .label { padding-top: 2px; min-width: 22px; }
+.plan-key { margin-left: auto; font-size: 11px; color: var(--muted); display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+.plan-key i { width: 6px; height: 6px; border-radius: 50%; background: #b9bdcb; display: inline-block; }
+.plan-key i.act { background: var(--blue); }
+.plan-key i:not(.act) { margin-left: 8px; }
+.info { cursor: help; color: var(--muted); font-size: 11px; font-weight: 600; border: 1px solid var(--axis); border-radius: 50%; width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center; font-style: normal; flex: none; }
+.pill { display: inline-block; font-size: 10.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; border-radius: 4px; padding: 3px 8px; margin-right: 6px; vertical-align: 1px; }
+.pill.warn { background: var(--orange-tint); color: var(--orange-ink); }
+.pill.ok { background: var(--teal-tint); color: var(--teal-ink); }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.card h3 { margin: 0 0 4px; font-size: 16px; font-weight: 600; }
+.card .sub { margin: 0 0 12px; color: var(--ink-2); font-size: 13px; }
+svg.chart { display: block; width: 100%; height: auto; overflow: visible; }
+svg.chart text { fill: var(--muted); font-size: 11px; font-family: inherit; }
+svg.chart .lbl { fill: var(--ink-2); font-size: 12.5px; }
+svg.chart .val { fill: var(--ink); font-size: 12.5px; font-weight: 600; }
+.bridge-note { font-size: 13.5px; color: var(--ink-2); margin: 8px 0 0; }
+.bridge-note b { color: var(--ink); font-weight: 600; }
+
+/* Data notes table */
+table.notes { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.notes th { text-align: left; font-size: 11px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; padding: 10px 10px; border-bottom: 1px solid var(--line); }
+table.notes td { padding: 12px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.notes td.id { color: var(--blue); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.notes-intro { color: var(--ink-2); margin: 0 0 14px; }
+
+#tip { position: fixed; pointer-events: none; background: #fff; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 9px 11px; font-size: 12px; box-shadow: 0 6px 20px rgba(22,26,84,.14); opacity: 0; transition: opacity .1s; max-width: 270px; z-index: 10; }
+#tip b { font-weight: 600; }
+#drop { position: fixed; inset: 0; background: rgba(44,85,214,.08); border: 3px dashed var(--blue); display: none; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; color: var(--blue); z-index: 20; }
+body.dragging #drop { display: flex; }
+.status { font-size: 12px; color: var(--muted); margin-top: 18px; }
+[hidden] { display: none !important; }
+
+@media (min-width: 901px) { .wrap, .band .inner, .tabs { padding-left: 32px; padding-right: 32px; } }
+@media (max-width: 900px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } .grid2 { grid-template-columns: 1fr; } }
+body[data-view="sales"] .ctx-desc { display: none; }
+.op-table td:first-child { white-space: nowrap; }
+@media (max-width: 560px) { .op-table th:nth-child(2), .op-table td:nth-child(2) { display: none; } .op-table { font-size: 12px; } .cv-head select { min-width: 0; flex: 1; } }
+@media (max-width: 520px) { .tile .value { font-size: 22px; } .band .divider, .band h1 { display: none; } .tile { padding: 12px; } }
+</style>
+</head>
+<body>
+<div class="band">
+  <div class="inner">
+    <!-- MedCorp logo (fictional company), also in assets/medcorp-logo.svg -->
+    <svg class="logo" viewBox="0 0 178 40" role="img" aria-label="MedCorp">
+      <rect x="0" y="2" width="36" height="36" rx="9" fill="#3fa38c"/>
+      <path d="M15 9h6v8h8v6h-8v8h-6v-8H7v-6h8z" fill="#ffffff" opacity="0.22"/>
+      <path d="M5 21h7l3-7 5 14 3-7h8" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="46" y="29" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="25" font-weight="700" letter-spacing="-0.5" fill="#ffffff">med<tspan font-weight="400">corp</tspan></text>
+    </svg>
+    <span class="divider"></span>
+    <h1>Business Strategy &amp; KPIs</h1>
+    <span class="spacer"></span>
+    <label class="btn" title="Add the next quarter's Excel file, or drag it onto the page">+ Add quarter file<input type="file" id="file" accept=".xlsx" hidden></label>
+  </div>
+</div>
+
+<div class="tabs-wrap">
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-view="overview">Executive summary</button>
+    <button class="tab" role="tab" aria-selected="false" data-view="sales">Country sales view</button>
+    <button class="tab" role="tab" aria-selected="false" data-view="notes">Data notes<span class="count" id="notesCount"></span></button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="page-head">
+    <h2 id="pageTitle">Europe Executive Summary</h2>
+    <span class="context" id="context">Loading data…</span>
+  </div>
+  <p class="page-sub" id="pageSub" hidden></p>
+
+  <section id="view-overview">
+    <div id="tiles"></div>
+
+    <div class="group">
+      <div class="group-head"><h3>How does a European customer compare?</h3></div>
+      <div class="ue-summary" id="ueSummary"></div>
+      <div class="ue-row">
+        <div class="card ue-card" id="unitTable"></div>
+        <div class="card pb-card" id="paybackCard"></div>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-head"><h3>Can Europe scale efficiently?</h3></div>
+      <div class="opp-row">
+        <div class="card cx-card" id="countryCard"></div>
+        <div class="card cx-card" id="marketCard"></div>
+      </div>
+    </div>
+
+    <div class="group" id="proposalSection">
+      <div class="group-head"><h3>Where Should We Invest in FY27?</h3></div>
+      <div class="card cx-card" id="proposalCard"></div>
+    </div>
+  </section>
+
+  <section id="view-sales" hidden>
+    <div id="oppCard"></div>
+  </section>
+
+  <section id="view-notes" hidden>
+    <p class="notes-intro" id="notesSummary"></p>
+    <div class="card" style="padding:6px 8px"><div id="notesBody"></div></div>
+  </section>
+
+  <p class="status" id="status"></p>
+</div>
+<div id="tip"></div>
+<div id="drop">Drop the quarter file to add it</div>
+
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="src/pipeline.js"></script>
+<script>
+'use strict';
+const BASE_FILE = 'data/raw/MedCorp_Europe_Data_Pack_1.xlsx';
+let raw = Pipeline.emptyRaw();
+const loadedFiles = [];
+
+// ---------- formatting ----------
+const usd = (n) => '$' + Math.round(n).toLocaleString('en-US');
+const usdShort = (n) => Math.abs(n) >= 1e6 ? '$' + (n / 1e6).toFixed(1) + 'M' : '$' + Math.round(n / 1e3) + 'K';
+const pct = (x, d = 0) => (x * 100).toFixed(d) + '%';
+const months = (x) => x.toFixed(1);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+// ---------- icons (stroke, 24 grid) ----------
+const ICON = {
+  dollar: '<path d="M12 3v18M16.5 7.5c0-1.9-2-3-4.5-3s-4.5 1.2-4.5 3.2c0 4.6 9 2.3 9 7 0 2-2 3.3-4.5 3.3s-4.5-1.1-4.5-3"/>',
+  trend: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+  target: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.8"/>',
+  plus: '<circle cx="12" cy="12" r="8.5"/><path d="M12 8v8M8 12h8"/>',
+  users: '<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2c2.4.2 4 1.8 4.5 4.3"/>',
+  building: '<path d="M4 20V6l8-3 8 3v14"/><path d="M9 20v-5h6v5M9 9h.01M15 9h.01M12 9h.01"/>',
+  bed: '<path d="M3 18V7M3 13h18v5M21 13a3 3 0 0 0-3-3h-7v3"/><circle cx="7" cy="10.5" r="1.6"/>',
+  clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+};
+const icon = (k) => `<span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${ICON[k]}</svg></span>`;
+
+// ---------- tooltip ----------
+const tip = document.getElementById('tip');
+document.addEventListener('mousemove', (e) => {
+  const t = e.target.closest('[data-tip]');
+  if (!t) { tip.style.opacity = 0; return; }
+  tip.innerHTML = t.getAttribute('data-tip');
+  const x = Math.min(e.clientX + 14, window.innerWidth - tip.offsetWidth - 8);
+  const y = Math.min(e.clientY + 14, window.innerHeight - tip.offsetHeight - 8);
+  tip.style.left = x + 'px'; tip.style.top = y + 'px'; tip.style.opacity = 1;
+});
+
+// ---------- KPI tiles ----------
+// A comparison chip: colored arrow, gray % text, absolute change in parentheses
+function chip(cur, base, label, absFmt, goodUp = true) {
+  if (base === undefined || base === '' || base === 0 || cur === '') return '';
+  const d = cur - base, rel = d / Math.abs(base);
+  if (Math.abs(d) < 1e-9) return `<span class="chip"><span class="arr">●</span>0% ${label}</span>`;
+  const good = (d > 0) === goodUp;
+  return `<span class="chip"><span class="arr ${good ? 'good' : 'bad'}">${d > 0 ? '▲' : '▼'}</span>${(Math.abs(rel) * 100).toFixed(1)}% ${label}` +
+    (absFmt ? ` <span class="abs">(${d > 0 ? '+' : '−'}${absFmt(Math.abs(d))})</span>` : '') + '</span>';
+}
+// Points change (for ratios like plan attainment)
+function chipPts(cur, base, label) {
+  if (base === undefined || base === '' || cur === '') return '';
+  const d = Math.round((cur - base) * 100);
+  if (!d) return `<span class="chip"><span class="arr">●</span>0 pts ${label}</span>`;
+  return `<span class="chip"><span class="arr ${d > 0 ? 'good' : 'bad'}">${d > 0 ? '▲' : '▼'}</span>${Math.abs(d)} pts ${label}</span>`;
+}
+// Plan attainment as a progress bar: % above the knob, plan value as the goal
+function planChip(cur, plan, absFmt, goalFmt, goalText) {
+  if (!plan || cur === '') return '';
+  const a = cur / plan, w = Math.min(a, 1) * 100, d = cur - plan;
+  return `<div class="goal" data-tip="${esc('<b>' + Math.round(a * 100) + '% of plan</b><br>Actual ' + goalFmt(cur) + ' · plan ' + goalFmt(plan) + '<br>' + (d >= 0 ? 'Above plan by ' : 'Short of plan by ') + absFmt(Math.abs(d)))}">
+    <div class="gap ${d >= 0 ? 'good' : 'bad'}">${d >= 0 ? '+' : '−'}${absFmt(Math.abs(d))} ${d >= 0 ? 'above plan' : 'short'}</div><div class="track"><div class="fill" style="width:${w}%"></div><span class="knob" style="left:${w}%"><span class="pct">${Math.round(a * 100)}%</span></span></div>
+    <div class="goal-text"><span>${goalText || 'Plan <span class="abs">' + goalFmt(plan) + '</span>'}</span></div>
+  </div>`;
+}
+// US plan attainment as a small chip (same look as Europe, without the bar)
+function planPct(cur, plan) {
+  if (!plan || cur === '') return '';
+  const good = cur >= plan;
+  return '<span class="chip"><span class="arr ' + (good ? 'good' : 'bad') + '">' + (good ? '▲' : '▼') + '</span>' + Math.round((cur / plan) * 100) + '% of plan</span>';
+}
+const status = (ok, okText, warnText) => `<span class="chip ${ok ? 'ok' : 'warn'}">${ok ? okText : warnText}</span>`;
+// Sparklines are drawn at the real size of their slot (so they fill it without distortion).
+// spark() registers the series and returns a placeholder; drawSparks() renders all of them.
+const SPARKS = [];
+function spark(points, fmt, type) {
+  if (!points || points.length < 2) return '';
+  SPARKS.push({ points, fmt, type });
+  return '<div class="spark-host" data-i="' + (SPARKS.length - 1) + '"></div>';
+}
+function sparkSvg({ points, fmt, type }, W, H, baseY, labelY) {
+  const LY = labelY && labelY < H ? labelY : H - 3; // date labels share the baseline of the text under the plan bar
+  // baseY: where the lowest value sits (aligned with the plan bar); dates go below it
+  const L = 6, R = 6, T = 24, B = baseY && baseY < H - 16 ? H - baseY : 18;
+  const vals = points.flatMap((p) => (p.plan ? [p.value, p.plan] : [p.value])), max = Math.max(...vals), min = Math.min(...vals);
+  const planColor = '#b9bdcb';
+  const tipOf = (p) => esc('<b>' + p.label + '</b><br>' + fmt(p.value) + (p.plan ? '<br>Plan ' + fmt(p.plan) + ' · ' + Math.round((p.value / p.plan) * 100) + '% of plan' : ''));
+
+  // Bars (counts per period): start at zero, partial periods lighter, plan as a dot
+  if (type === 'bar') {
+    const n = points.length, slot = (W - L - R) / n, bw = Math.min(slot * 0.62, 26), base = H - B;
+    const cx = (i) => L + slot * (i + 0.5), yb = (v) => T + (base - T) * (1 - v / (max || 1));
+    let s = '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + base + '" y2="' + base + '" stroke="var(--axis)"/>';
+    points.forEach((p, i) => {
+      const top = yb(p.value), h = base - top, r = Math.min(3, h);
+      s += '<path d="M' + (cx(i) - bw / 2) + ',' + base + ' v' + (-(h - r)) + ' q0,' + (-r) + ' ' + r + ',' + (-r) + ' h' + (bw - 2 * r) + ' q' + r + ',0 ' + r + ',' + r + ' v' + (h - r) + ' z" fill="' + (p.partial ? 'var(--blue-soft)' : 'var(--blue)') + '"/>';
+      if (p.plan) s += '<circle cx="' + cx(i) + '" cy="' + yb(p.plan) + '" r="3" fill="' + planColor + '"/>';
+    });
+    const last = n - 1;
+    s += '<text x="' + cx(0) + '" y="' + (yb(points[0].value) - 6) + '" text-anchor="middle" class="sv">' + fmt(points[0].value) + '</text>';
+    s += '<text x="' + cx(last) + '" y="' + (yb(points[last].value) - 6) + '" text-anchor="middle" class="sv strong">' + fmt(points[last].value) + '</text>';
+    s += '<text x="' + (cx(0) - bw / 2) + '" y="' + LY + '" class="sl">' + points[0].label + '</text><text x="' + (cx(last) + bw / 2) + '" y="' + LY + '" text-anchor="end" class="sl">' + points[last].label + '</text>';
+    points.forEach((p, i) => { s += '<rect x="' + (L + slot * i) + '" y="0" width="' + slot + '" height="' + H + '" fill="transparent" data-tip="' + tipOf(p) + '"/>'; });
+    return '<svg class="spark" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Bars from ' + points[0].label + ' to ' + points[last].label + '">' + s + '</svg>';
+  }
+
+  const x = (i) => L + (i * (W - L - R)) / (points.length - 1);
+  const y = (v) => T + (H - T - B) * (1 - (v - min) / (max - min || 1));
+  const line = points.map((p, i) => x(i) + ',' + y(p.value)).join(' ');
+  const last = points.length - 1, step = (W - L - R) / last;
+  let s = '<polygon points="' + x(0) + ',' + (H - B) + ' ' + line + ' ' + x(last) + ',' + (H - B) + '" fill="var(--blue-tint)" opacity=".8"/>';
+  // Plan: light solid line with small filled dots; a single plan point is just a dot
+  const planIdx = points.map((p, i) => (p.plan ? i : -1)).filter((i) => i >= 0);
+  if (planIdx.length) {
+    if (planIdx.length > 1) s += '<polyline points="' + planIdx.map((i) => x(i) + ',' + y(points[i].plan)).join(' ') + '" fill="none" stroke="#b9bdcb" stroke-width="1.6"/>';
+    planIdx.forEach((i) => { s += '<circle cx="' + x(i) + '" cy="' + y(points[i].plan) + '" r="3" fill="#b9bdcb"/>'; });
+  }
+  s += '<polyline points="' + line + '" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linejoin="round"/>';
+  points.forEach((p, i) => { s += '<circle cx="' + x(i) + '" cy="' + y(p.value) + '" r="' + (i === last ? 3.8 : 2.4) + '" fill="' + (i === last ? 'var(--blue)' : '#fff') + '" stroke="var(--blue)" stroke-width="1.5"/>'; });
+  s += '<text x="' + x(0) + '" y="' + (y(points[0].value) - 8) + '" text-anchor="start" class="sv">' + fmt(points[0].value) + '</text>';
+  const lp = points[last], below = lp.plan && lp.plan > lp.value;
+  s += '<text x="' + (x(last) - 6) + '" y="' + (below ? y(lp.value) + 16 : y(lp.value) - 9) + '" text-anchor="end" class="sv strong">' + fmt(lp.value) + '</text>';
+  s += '<text x="' + x(0) + '" y="' + LY + '" text-anchor="start" class="sl">' + points[0].label + '</text><text x="' + x(last) + '" y="' + LY + '" text-anchor="end" class="sl">' + points[last].label + '</text>';
+  // Plan legend, bottom right, left of the last date
+  points.forEach((p, i) => { s += '<rect x="' + (x(i) - step / 2) + '" y="0" width="' + step + '" height="' + H + '" fill="transparent" data-tip="' + esc('<b>' + p.label + '</b><br>' + fmt(p.value) + (p.plan ? '<br>Plan ' + fmt(p.plan) + ' · ' + Math.round((p.value / p.plan) * 100) + '% of plan' : '')) + '"/>'; });
+  return '<svg class="spark" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Trend from ' + points[0].label + ' to ' + points[last].label + '">' + s + '</svg>';
+}
+function drawSparks() {
+  document.querySelectorAll('.spark-host').forEach((h) => {
+    const r = h.getBoundingClientRect();
+    if (!(r.width > 0 && r.height > 0)) return;
+    // Align the lowest point with the plan bar of this row (if the row has one)
+    const row = h.closest('.tiles');
+    const track = row ? row.querySelector('.track') : null;
+    const baseY = track ? Math.round(track.getBoundingClientRect().top + track.offsetHeight / 2 - r.top) : undefined;
+    const gt = row ? row.querySelector('.goal-text') : null;
+    const labelY = gt ? Math.round(gt.getBoundingClientRect().bottom - 4 - r.top) : undefined;
+    h.innerHTML = sparkSvg(SPARKS[+h.dataset.i], Math.floor(r.width), Math.floor(r.height), baseY, labelY);
+  });
+}
+// Redraw whenever a card changes size (window resize, browser zoom, layout change)
+const sparkObserver = new ResizeObserver(() => { clearTimeout(drawSparks.t); drawSparks.t = setTimeout(drawSparks, 60); });
+const watchSparks = () => document.querySelectorAll('.spark-host').forEach((h) => sparkObserver.observe(h));
+new MutationObserver(watchSparks).observe(document.getElementById('tiles'), { childList: true, subtree: true });
+new MutationObserver(watchSparks).observe(document.getElementById('oppCard'), { childList: true, subtree: true });
+const usdK = (n) => (!n ? '$0' : n >= 1e6 ? '$' + (n / 1e6).toFixed(2) + 'M' : '$' + Math.round(n / 1e3) + 'K');
+const usdRound = (n) => n >= 1e6 ? '$' + (n / 1e6).toFixed(1) + 'M' : '$' + Math.round(n).toLocaleString('en-US');
+
+function tiles(m, prev, through) {
+  const eu = m.EU, us = m.US, p = prev ? prev.EU : {};
+  const q = through.replace('-', ' ');
+  const sign = (v) => (v >= 0 ? '+' : '');
+  const qRange = through.endsWith('Q1') ? 'in Q1' : 'Q1–' + through.slice(5);
+  const yearAgo = (arr, key) => (arr.length > 4 ? arr[arr.length - 5][key] : '');
+  const prevQ = (arr, key) => (arr.length > 1 ? arr[arr.length - 2][key] : '');
+  const usGrowth = `<span class="arr">${us.yoy_growth >= 0 ? '▲' : '▼'}</span> ${pct(us.yoy_growth, 1)} YoY`;
+
+  SPARKS.length = 0;
+  const groups = [
+    { title: 'Is Europe growing?',
+      summary: `Europe is growing ${eu.yoy_growth >= us.yoy_growth ? 'faster' : 'slower'} than the US, ${eu.arr_attainment === '' ? '' : eu.arr_attainment >= 1 ? 'and is on its ARR plan.' : 'but remains below its ARR plan.'}`,
+      facts: [`ARR ${sign(eu.yoy_growth)}${pct(eu.yoy_growth, 1)} YoY vs US ${sign(us.yoy_growth)}${pct(us.yoy_growth, 1)}`,
+        eu.arr_attainment === '' ? '' : `${pct(eu.current_arr / eu.arr_plan)} of ${through.slice(5)} ARR plan vs US ${pct(us.current_arr / us.arr_plan)}`,
+        `${eu.new_customers_ytd} of ${eu.new_customers_plan_ytd} new customers planned ${qRange}`].filter(Boolean),
+      tiles: [
+      { label: through.slice(5) + ' ARR', info: 'Sum of ARR in the latest quarter, active customers only (billing system).',
+        value: usdRound(eu.current_arr),
+        chips: [chip(eu.current_arr, eu.current_arr - eu.arr_added_12m, 'YoY', usdRound), planChip(eu.current_arr, eu.arr_plan, usdK, usdRound)],
+        plan: true,
+        spark: spark(eu.arr_by_quarter.map((d) => ({ label: d.quarter.replace('-', ' '), value: d.arr, plan: d.plan || 0 })), usdRound),
+        ref: `Europe is <b>${pct(eu.current_arr / (eu.current_arr + us.current_arr), 1)}</b> of company ARR. The US added <b>${Math.round(us.arr_added_12m / eu.arr_added_12m)}×</b> more ARR in $.`,
+        us: usdRound(us.current_arr), usChips: [chip(us.current_arr, us.current_arr - us.arr_added_12m, 'YoY', usdRound), planPct(us.current_arr, us.arr_plan)] },
+      { label: 'New customers, ' + through.slice(0, 4) + ' to date', info: 'Valid customers by signing quarter. Compared with the same quarters last year and with the board plan.',
+        value: String(eu.new_customers_ytd) + `<small>of ${eu.new_customers_plan_ytd} planned</small>`,
+        chips: [chip(eu.new_customers_ytd, eu.new_customers_prev_ytd, 'YoY', (d) => String(d)), planChip(eu.new_customers_ytd, eu.new_customers_plan_ytd, (d) => String(d), (d) => String(d),
+          through.endsWith('Q4') ? '' : `Plan ${qRange} <span class="abs">${eu.new_customers_plan_ytd}</span> · year <span class="abs">${eu.new_customers_plan_year}</span>`)],
+        plan: true,
+        spark: spark(eu.new_customers_by_year.filter((d) => +d.year >= 2019).map((d) => ({ label: d.year + (d.partial ? ' YTD' : ''), value: d.count, partial: d.partial, plan: d.year === through.slice(0, 4) ? eu.new_customers_plan_ytd : 0 })), (v) => String(v), 'bar'),
+        ref: through.endsWith('Q4') ? 'Full year.' : `The plan is ${eu.new_customers_plan_year / 4} a quarter, but about 40% of deals are usually signed in Q4.`,
+        us: `${us.new_customers_ytd} <small>of ${us.new_customers_plan_ytd} planned ${qRange}</small>`, usChips: [chip(us.new_customers_ytd, us.new_customers_prev_ytd, 'YoY', (d) => String(d)), planPct(us.new_customers_ytd, us.new_customers_plan_ytd)] },
+      { label: 'Active customers', info: 'Valid customers billed above 0 in the latest quarter.',
+        value: String(eu.active_customers),
+        chips: [chip(eu.active_customers, yearAgo(eu.active_by_quarter, 'count'), 'YoY', (d) => String(d))],
+        spark: spark(eu.active_by_quarter.map((d) => ({ label: d.quarter.replace('-', ' '), value: d.count })), (v) => String(v)),
+        ref: eu.churned_customers ? `<b>${eu.churned_customers}</b> churned this quarter (billed 0).` : 'No churn this quarter.',
+        us: String(us.active_customers), usChips: [chip(us.active_customers, yearAgo(us.active_by_quarter, 'count'), 'YoY', (d) => String(d))] },
+    ] },
+    { title: 'What does a European customer look like?',
+      summary: 'A typical European customer is a much smaller group, paying less per bed than in the US.',
+      facts: [`Median ARR per customer ${usdRound(eu.median_arr_per_customer)} vs US ${usdRound(us.median_arr_per_customer)}`,
+        `ARR per bed ${usd(eu.arr_per_bed)} vs US ${usd(us.arr_per_bed)} (${pct(eu.arr_per_bed / us.arr_per_bed)})`],
+      tiles: [
+      { label: 'ARR per customer, median', info: 'Median current ARR of active customers.',
+        value: usdRound(eu.median_arr_per_customer), chips: [], spark: '',
+        ref: `<b>${pct(eu.median_arr_per_customer / us.median_arr_per_customer)}</b> of a typical US customer.`,
+        us: usdRound(us.median_arr_per_customer) },
+      { label: 'ARR per bed', info: 'Current ARR ÷ beds of active customers. The price level, mostly driven by public tenders in Europe.',
+        value: usd(eu.arr_per_bed), chips: [], spark: '',
+        ref: `<b>${pct(eu.arr_per_bed / us.arr_per_bed)}</b> of the US price per bed.`,
+        us: usd(us.arr_per_bed) },
+    ] },
+    { title: 'Does it pay back?',
+      summary: `A typical European customer ${eu.median_payback > 36 ? 'takes longer than the 3-year contract to pay back' : 'pays back within the 3-year contract'}, and ${eu.contribution.length - eu.countries_covering_cost} of ${eu.contribution.length} countries do not cover their fixed cost.`,
+      facts: [`Median payback ${months(eu.median_payback)} months vs US ${months(us.median_payback)}`,
+        `Finance view ${months(eu.aggregate_payback)} months`,
+        `${eu.countries_covering_cost} of ${eu.contribution.length} countries cover their fixed cost`],
+      tiles: [
+      { label: 'Payback, typical customer', info: 'Median of CAC ÷ (ARR × 80% ÷ 12) per customer. The research memo number.',
+        value: months(eu.median_payback) + '<small>months</small>',
+        chips: [status(eu.median_payback <= 36, 'Within contract', 'Over contract')], spark: '',
+        ref: `<b>${eu.payback_over_contract} of ${eu.active_customers}</b> customers take longer than the 36-month contract.`,
+        us: months(us.median_payback) + ' months' },
+      { label: 'Payback, Finance view', info: 'Total CAC ÷ total monthly gross profit. The FY26 board pack number.',
+        value: months(eu.aggregate_payback) + '<small>months</small>',
+        chips: [status(eu.aggregate_payback <= 36, 'Within contract', 'Over contract')], spark: '',
+        ref: 'Lower than the typical customer because of 2 large customers. See below.',
+        us: months(us.aggregate_payback) + ' months' },
+      { label: 'Countries covering fixed cost', info: 'Country contribution = country ARR × 80% − fixed in-country cost. Active markets only.',
+        value: eu.countries_covering_cost + `<small>of ${eu.contribution.length} countries</small>`,
+        chips: [status(eu.total_contribution >= 0, 'Covers cost', 'Below cost')], spark: '',
+        ref: `Europe in total: <b>${eu.total_contribution < 0 ? '−' : '+'}${usd(Math.abs(eu.total_contribution))}</b> a year after fixed cost.`,
+        us: `one market, ${usdRound(us.total_contribution)} a year` },
+    ] },
+  ];
+
+  // One summary sentence per card (computed, so it follows the data), with its key numbers
+  const [arrT, newT, actT] = groups[0].tiles, [perCustT, perBedT] = groups[1].tiles, [pbT, finT, ctyT] = groups[2].tiles;
+  const yoyActive = yearAgo(eu.active_by_quarter, 'count'), covering = eu.contribution.filter((k) => k.contribution >= 0).map((k) => k.country === 'United Kingdom' ? 'UK' : k.country);
+  arrT.sum = `Europe is growing ${eu.yoy_growth >= us.yoy_growth ? 'faster' : 'slower'} than the US${eu.arr_attainment === '' ? '.' : eu.arr_attainment >= 1 ? ', and is on its ARR plan.' : ', but remains below its ARR plan.'}`;
+  arrT.facts = [`${sign(eu.yoy_growth)}${pct(eu.yoy_growth, 1)} YoY vs US ${sign(us.yoy_growth)}${pct(us.yoy_growth, 1)}`, eu.arr_plan ? `${pct(eu.current_arr / eu.arr_plan)} of ${through.slice(5)} ARR plan vs US ${pct(us.current_arr / us.arr_plan)}` : ''];
+  newT.sum = `New customers are ${eu.new_customers_ytd >= eu.new_customers_plan_ytd ? 'on' : 'behind'} plan for ${qRange}, ${eu.new_customers_ytd > eu.new_customers_prev_ytd ? 'ahead of' : eu.new_customers_ytd === eu.new_customers_prev_ytd ? 'level with' : 'behind'} last year.`;
+  newT.facts = [`${eu.new_customers_ytd} vs ${eu.new_customers_plan_ytd} planned ${qRange}`, `${eu.new_customers_plan_year} planned for the year`, `${eu.new_customers_prev_ytd} in the same period last year`];
+  actT.sum = `Europe has ${Math.abs(eu.active_customers - yoyActive)} ${eu.active_customers >= yoyActive ? 'more' : 'fewer'} active customers than a year ago.`;
+  actT.facts = [`${sign(eu.active_customers / yoyActive - 1)}${pct(eu.active_customers / yoyActive - 1, 1)} YoY vs US ${sign(us.active_customers / yearAgo(us.active_by_quarter, 'count') - 1)}${pct(us.active_customers / yearAgo(us.active_by_quarter, 'count') - 1, 1)}`];
+  perCustT.sum = `A typical European customer brings ${pct(eu.median_arr_per_customer / us.median_arr_per_customer)} of the ARR of a typical US customer.`;
+  perCustT.facts = [`Median ${usdRound(eu.median_arr_per_customer)} vs US ${usdRound(us.median_arr_per_customer)}`];
+  perBedT.sum = `Europe is priced at ${pct(eu.arr_per_bed / us.arr_per_bed)} of the US per bed.`;
+  perBedT.facts = [`${usd(eu.arr_per_bed)} vs US ${usd(us.arr_per_bed)} per bed`];
+  pbT.sum = `A typical European customer ${eu.median_payback > 36 ? 'takes longer than the 3-year contract to pay back' : 'pays back within the 3-year contract'}.`;
+  pbT.facts = [`${months(eu.median_payback)} vs US ${months(us.median_payback)} months`, `${eu.payback_over_contract} of ${eu.active_customers} over 36 months`];
+  finT.sum = `Across all customers together, Europe pays back ${eu.aggregate_payback <= 36 ? 'within' : 'beyond'} the contract.`;
+  finT.facts = [`${months(eu.aggregate_payback)} months vs US ${months(us.aggregate_payback)}`, `2 customers hold ${pct(eu.bridge.top2_arr_share)} of EU ARR`];
+  ctyT.sum = `${eu.contribution.length - eu.countries_covering_cost} of ${eu.contribution.length} countries do not cover their fixed cost.`;
+  ctyT.facts = [`${covering.join(' and ') || 'None'} cover${covering.length === 1 ? 's' : ''} theirs`, `Europe ${eu.total_contribution < 0 ? '−' : '+'}${usdRound(Math.abs(eu.total_contribution))} a year`];
+
+  // Customer profile and payback: one comparison table (unitTable). Country cost: its own card next to the payback chart.
+  unitTable(eu, us);
+  countryCard(eu);
+
+  document.getElementById('tiles').innerHTML = groups.slice(0, 1).map((g) => `
+    <div class="group">
+      <div class="group-head"><h3>${g.title}</h3></div>
+      <div style="--cols:${g.tiles.length}" class="tiles${g.tiles.some((d) => d.chips.filter(Boolean).length) ? '' : ' no-chips'}${g.tiles.some((d) => d.spark) ? '' : ' no-spark'}">${g.tiles.map((d) => `
+        <div class="cell">
+        <div class="summary"><p class="headline">${d.sum}</p><p class="facts">${d.facts.filter(Boolean).join('<span class="sep">|</span>')}</p></div>
+        <div class="tile">
+          <div class="top"><span class="label">${d.label}</span><i class="info" data-tip="${esc(d.info)}">i</i></div>
+          <div class="body${d.spark ? ' has-spark' : ''}">
+            <div class="main"><div class="value">${d.value}</div><div class="chips">${d.chips.filter(Boolean).join('')}</div></div>
+            ${d.spark ? `<div class="spark-slot">${d.spark}</div>` : ''}
+          </div>
+          <div class="foot"><div class="us"><span class="label">US</span><div class="us-body"><b>${d.us}</b>${(d.usChips || []).filter(Boolean).length ? '<div class="us-chips">' + d.usChips.filter(Boolean).join('') + '</div>' : ''}</div>${d.plan ? '<span class="plan-key"><i class="act"></i>Actual<i></i>Plan</span>' : ''}</div><div class="ref">${d.ref}</div></div>
+        </div>
+        </div>`).join('')}</div>
+    </div>`).join('');
+  drawSparks();
+}
+
+// ---------- country economics: which countries cover their fixed cost ----------
+function countryCard(eu) {
+  const list = eu.contribution; // sorted best first
+  const fixed = list.reduce((s, k) => s + k.fixed_cost, 0);
+  const n = list.length, cover = eu.countries_covering_cost;
+  document.getElementById('countryCard').innerHTML = `
+    <div class="cx-a">
+      <h4>Country economics <i class="info" data-tip="${esc('Contribution = country ARR × 80% − fixed in-country cost (regulation, localization, integration, clinical support). Active markets only. Hover a bar for the country.')}">i</i></h4>
+      <div class="cx-head"><span class="cx-big">${cover} <small>/ ${n}</small></span><span class="cx-cap">countries cover their fixed cost</span></div>
+    </div>
+    <div class="cx-b">
+    <div class="cx-segs">${list.map((k) => `<span class="${k.contribution >= 0 ? 'ok' : 'no'}" data-tip="${esc('<b>' + k.country + '</b><br>Gross profit ' + usdK(k.gross_profit) + ' · fixed cost ' + usdK(k.fixed_cost) + '<br>Contribution ' + (k.contribution < 0 ? '−' : '+') + usdK(Math.abs(k.contribution)) + ' a year')}"></span>`).join('')}</div>
+    <div class="cx-legend"><span class="ok">${cover} cover their cost</span><span class="no">${n - cover} do not</span></div>
+    </div>
+    <div class="cx-stats">
+      <div><div class="label">Fixed country cost, a year</div><div class="cx-num">${usdRound(fixed)}</div></div>
+      <div><div class="label">Europe after fixed cost</div><div class="cx-num ${eu.total_contribution < 0 ? 'neg' : ''}">${eu.total_contribution < 0 ? '−' : '+'}${usdK(Math.abs(eu.total_contribution))}</div></div>
+    </div>`;
+}
+
+// ---------- country view: how is my country doing, and who to go after next ----------
+const BIG_BEDS = 1000;
+let OPP = { country: '' };
+function oppCard(result) {
+  const eu = result.metrics.EU, t = result.data_through;
+  const yearAgoQ = (+t.slice(0, 4) - 1) + t.slice(4);
+  const logos = result.tables.logos.filter((l) => l.region === 'EU');
+  const countries = eu.contribution.map((k) => k.country).sort();
+  const bigProspects = (c) => logos.filter((l) => l.country === c && l.logo_status === 'Prospect' && l.total_beds >= BIG_BEDS).length;
+  const arrIn = (c, q) => result.tables.quarterly_arr.filter((r) => r.is_valid_customer && r.country === c && r.quarter === q).reduce((s, r) => s + r.arr_usd, 0);
+  OPP = {
+    result, eu, logos, t, yearAgoQ, arrIn, cac: eu.median_cac,
+    country: OPP.country && countries.includes(OPP.country) ? OPP.country : [...countries].sort((a, b) => bigProspects(b) - bigProspects(a))[0],
+  };
+  document.getElementById('oppCard').innerHTML = `
+    <div class="cv-pick"><label class="label" for="oppCountry">Country</label>
+      <select id="oppCountry">${countries.map((c) => `<option value="${esc(c)}"${c === OPP.country ? ' selected' : ''}>${esc(c)}</option>`).join('')}</select>
+    </div>
+    <div class="cv-head"><h3 class="cv-title" id="cvTitle"></h3></div>
+    <div id="cvStats"></div>
+    <h3 class="cv-title cv-next">Who to go after next?</h3>
+    <p class="cv-lead">Largest unconverted hospital groups, ranked by bed count.</p>
+    <div class="card op-card" id="oppList"></div>`;
+  document.getElementById('oppCountry').addEventListener('change', (e) => { OPP.country = e.target.value; countryStats(); oppList(); });
+  countryStats();
+  oppList();
+}
+function countryStats() {
+  const { result, eu, t, yearAgoQ, arrIn, country: c } = OPP;
+  const now = arrIn(c, t), before = arrIn(c, yearAgoQ);
+  const cust = result.tables.customers.filter((x) => x.is_valid_customer && x.country_clean === c);
+  const active = cust.filter((x) => x.is_currently_active_customer).length, churned = cust.filter((x) => x.is_churned_customer).length;
+  const k = eu.contribution.find((x) => x.country === c);
+  const newThisYear = cust.filter((x) => x.signed_quarter.slice(0, 4) === t.slice(0, 4)).length;
+  document.getElementById('cvTitle').innerHTML = 'How is <span class="cv-country">' + esc(c) + '</span> doing?';
+  // History per quarter for this country (billing), for the sparklines
+  const quarters = eu.arr_by_quarter.map((d) => d.quarter);
+  const qa = result.tables.quarterly_arr.filter((r) => r.is_valid_customer && r.country === c);
+  const arrQ = quarters.map((q) => ({ label: q.replace('-', ' '), value: qa.filter((r) => r.quarter === q).reduce((s, r) => s + r.arr_usd, 0) }));
+  const actQ = quarters.map((q) => ({ label: q.replace('-', ' '), value: new Set(qa.filter((r) => r.quarter === q && r.arr_usd > 0).map((r) => r.logo_id)).size }));
+  const shareQ = arrQ.map((d, i) => ({ label: d.label, value: d.value / (eu.arr_by_quarter[i].arr || 1) }));
+  const activeYearAgo = actQ.length > 4 ? actQ[actQ.length - 5].value : '';
+  const shareYearAgo = shareQ.length > 4 ? shareQ[shareQ.length - 5].value : '';
+  const rank = eu.contribution.findIndex((x) => x.country === c) + 1;
+  const sharePts = shareYearAgo === '' ? '' : Math.round((now / eu.current_arr - shareYearAgo) * 100);
+  const sp = (pts, fmt) => `<div class="cv-spark">${spark(pts, fmt)}</div>`;
+  document.getElementById('cvStats').innerHTML = `
+    <div class="cv-stats">
+      <div><div class="label">${t.slice(5)} ARR</div><div class="cv-num">${usdK(now)}</div>
+        <div class="cv-d">${before ? chip(now, before, 'YoY', usdK) : 'new this year'}</div>${sp(arrQ, usdK)}</div>
+      <div><div class="label">Active customers</div><div class="cv-num">${active}</div>
+        <div class="cv-d">${activeYearAgo !== '' ? chip(active, activeYearAgo, 'YoY', (d) => String(d)) : ''} ${newThisYear} signed in ${t.slice(0, 4)}${churned ? ` · ${churned} churned` : ''}</div>${sp(actQ, (v) => String(v))}</div>
+      <div><div class="label">Share of European ARR</div><div class="cv-num">${pct(now / eu.current_arr)}</div>
+        <div class="cv-d">${sharePts === '' ? '' : `<span class="chip"><span class="arr ${sharePts >= 0 ? 'good' : 'bad'}">${sharePts > 0 ? '▲' : sharePts < 0 ? '▼' : '●'}</span>${Math.abs(sharePts)} pts YoY</span>`}</div>${sp(shareQ, (v) => pct(v))}</div>
+      <div><div class="label">Contribution, a year</div><div class="cv-num ${k.contribution < 0 ? 'neg' : 'pos'}">${k.contribution < 0 ? '−' : '+'}${usdK(Math.abs(k.contribution))}</div>
+        <div class="cv-d">Annualized gross profit is <b>${usdK(Math.abs(k.contribution))} ${k.contribution < 0 ? 'below' : 'above'}</b> ${esc(c)}'s fixed operating costs. #${rank} of ${eu.contribution.length} countries.</div>
+        <div class="cv-bridge"><div><span>Gross profit</span><b>${usdK(k.gross_profit)}</b></div><div><span>Fixed country cost</span><b>−${usdK(k.fixed_cost)}</b></div></div></div>
+    </div>`;
+  drawSparks();
+}
+function oppList() {
+  const rows = OPP.logos.filter((l) => l.country === OPP.country && l.logo_status === 'Prospect').sort((a, b) => b.total_beds - a.total_beds).slice(0, 6);
+  const big = OPP.logos.filter((l) => l.country === OPP.country && l.logo_status === 'Prospect' && l.total_beds >= BIG_BEDS).length;
+  const pb = (arr) => (arr ? OPP.cac / (arr * 0.8 / 12) : '');
+  document.getElementById('oppList').innerHTML = `<table class="op-table"><thead><tr><th>Logo</th><th class="num">Hospitals</th><th class="num">Beds</th><th class="num">Est. ARR</th><th class="num">Est. payback</th></tr></thead><tbody>${rows.map((l) => {
+    const p = pb(l.estimated_prospect_arr);
+    return `<tr class="${l.total_beds >= BIG_BEDS ? 'big' : ''}"><td>${esc(l.logo_id)}</td><td class="num">${l.n_hospitals}</td><td class="num">${l.total_beds.toLocaleString('en-US')}</td><td class="num">${usdK(l.estimated_prospect_arr)}</td><td class="num ${p && p <= 12 ? 'okc' : ''}">${p ? months(p) + ' mo' : ''}</td></tr>`;
+  }).join('')}</tbody></table><p class="cx-note">${big} groups with ${BIG_BEDS.toLocaleString('en-US')}+ beds are not yet customers here. Top 6 prospects by beds. Est. ARR = beds × European ARR per bed; est. payback uses the median European CAC (${usdK(OPP.cac)}). Estimates, not quotes.</p>`;
+}
+
+// ---------- the FY27 request, in one concise card ----------
+function proposalCard(result) {
+  const p = result.proposal;
+  if (!p || !p.investment) { document.getElementById('proposalSection').hidden = true; return; }
+  const logos = result.tables.logos.filter((l) => l.region === 'EU');
+  const bigProspects = logos.filter((l) => l.total_beds >= BIG_BEDS && l.country_status === 'Active' && l.logo_status === 'Prospect').length;
+  const planYear = result.metrics.EU.new_customers_plan_year;
+  document.getElementById('proposalCard').innerHTML = `
+    <h4>FY2027 "Accelerate Europe" proposal</h4>
+    <p class="pr-lead">The EU GM's proposed investment, alongside the research team's alternative.</p>
+    <div class="pr-stats">
+      <div><div class="label">Requested funding</div><div class="cv-num">${usdRound(p.investment)}</div></div>
+      <div><div class="label">New logos target</div><div class="cv-num">${p.new_logos}</div>${planYear ? `<div class="cv-d">${(p.new_logos / planYear).toFixed(1)}× the FY${result.data_through.slice(0, 4)} target of ${planYear} new logos</div>` : ''}</div>
+      <div><div class="label">New countries</div><div class="cv-num">${p.new_countries.length}</div></div>
+    </div>
+    <div class="pr-cases">
+      <div><div class="pr-case">GM's growth case</div><p>${p.headcount_people ? p.headcount_people + ' additional staff and ' : ''}${usdRound(p.projected_arr)} expected new ARR, assuming ${usdK(p.arr_per_new_logo)} per logo. New countries: ${p.new_countries.join(', ')}.</p></div>
+      <div><div class="pr-case">Research alternative</div><p>Prioritize the ${bigProspects} large prospects (${BIG_BEDS.toLocaleString('en-US')}+ beds) in existing countries instead of new market entry.</p></div>
+    </div>`;
+}
+
+// ---------- market opportunity, summary numbers for the ELT ----------
+function marketCard(result) {
+  const logos = result.tables.logos.filter((l) => l.region === 'EU');
+  const big = logos.filter((l) => l.total_beds >= BIG_BEDS);
+  const inActive = big.filter((l) => l.country_status === 'Active');
+  const prospects = inActive.filter((l) => l.logo_status === 'Prospect');
+  document.getElementById('marketCard').innerHTML = `
+    <h4>High-value market opportunity <i class="info" data-tip="${esc('Large = ' + BIG_BEDS.toLocaleString('en-US') + '+ beds, the size that pays back within about 12 months at today\'s price and CAC.')}">i</i></h4>
+    <div class="mk-stats">
+      <div><div class="label">Large EU groups</div><div class="cx-num">${big.length}</div><div class="cv-d">${BIG_BEDS.toLocaleString('en-US')}+ beds · ${pct(big.reduce((s, l) => s + l.total_beds, 0) / logos.reduce((s, l) => s + l.total_beds, 0))} of European beds</div></div>
+      <div><div class="label">In existing countries</div><div class="cx-num pos">${inActive.length}</div><div class="cv-d">of which ${prospects.length} are not yet customers</div></div>
+    </div>
+    <button class="link-btn" type="button" onclick="show('sales')">Prospects by country in the Country sales view →</button>`;
+}
+
+// ---------- unit economics: Europe vs US, ordered as a chain ----------
+// price per bed -> revenue per customer -> cost to win -> months to pay back
+function unitTable(eu, us) {
+  const kUsd = (v) => "$" + Math.round(v / 1000).toLocaleString("en-US") + "K";
+  const ratio = (a, b) => a / b;
+  const beds = (v) => Math.round(v).toLocaleString('en-US');
+  const rows = [
+    { step: 'Size', label: 'Beds per customer', info: `Median beds of active customers. A typical European customer owns ${eu.median_hospitals_per_customer} hospitals, a US one ${us.median_hospitals_per_customer}.`,
+      eu: eu.median_beds_per_customer, us: us.median_beds_per_customer, fmt: beds, cmp: `${pct(ratio(eu.median_beds_per_customer, us.median_beds_per_customer))} of US` },
+    { step: 'Price', label: 'ARR per bed', info: 'Current ARR ÷ beds of active customers. Mostly public-tender pricing in Europe.',
+      eu: eu.arr_per_bed, us: us.arr_per_bed, fmt: usd, cmp: `${pct(ratio(eu.arr_per_bed, us.arr_per_bed))} of US` },
+    { step: 'Revenue', label: 'ARR per customer', info: 'Median current ARR of active customers. Size × price.',
+      eu: eu.median_arr_per_customer, us: us.median_arr_per_customer, fmt: kUsd, cmp: `${pct(ratio(eu.median_arr_per_customer, us.median_arr_per_customer))} of US` },
+    { step: 'Cost to win', label: 'CAC per customer', info: 'Median one-time sales and marketing cost to win a customer.',
+      eu: eu.median_cac, us: us.median_cac, fmt: kUsd, cmp: `${pct(ratio(eu.median_cac, us.median_cac))} of US` },
+    { step: 'Payback', label: 'Typical customer', info: 'Median of CAC ÷ (ARR × 80% ÷ 12) per customer. The research memo number.',
+      eu: eu.median_payback, us: us.median_payback, fmt: (v) => months(v) + ' mo', cmp: `${Math.round(ratio(eu.median_payback, us.median_payback))}× longer`, contract: true },
+    { step: '', label: 'Finance view', info: 'Total CAC ÷ total monthly gross profit. The FY26 board pack number.',
+      eu: eu.aggregate_payback, us: us.aggregate_payback, fmt: (v) => months(v) + ' mo', cmp: `${Math.round(ratio(eu.aggregate_payback, us.aggregate_payback))}× longer`, contract: true },
+  ];
+  // Payback rows share one scale, so the contract line sits in the same place
+  const pbMax = Math.max(...rows.filter((r) => r.contract).flatMap((r) => [r.eu, r.us]), 40) * 1.04;
+  let firstContract = true;
+  const bar = (r) => {
+    const max = r.contract ? pbMax : Math.max(r.eu, r.us) * 1.04;
+    const w = (v) => (v / max) * 100;
+    const label = r.contract && firstContract ? '<em>36-month contract</em>' : '';
+    if (r.contract) firstContract = false;
+    return `<div class="ue-bars">
+      ${r.contract ? `<span class="ue-contract" style="left:${w(36)}%">${label}</span>` : ''}
+      <div class="ue-bar eu" style="width:${w(r.eu)}%"></div>
+      <div class="ue-bar us" style="width:${w(r.us)}%"></div>
+    </div>`;
+  };
+  document.getElementById('ueSummary').innerHTML =
+    `<p class="headline">A European customer is about a tenth of the size of a US one and pays less per bed, so it brings ${pct(ratio(eu.median_arr_per_customer, us.median_arr_per_customer))} of the ARR. It costs ${pct(ratio(eu.median_cac, us.median_cac))} as much to win, so it takes ${Math.round(ratio(eu.median_payback, us.median_payback))}× longer to pay back.</p>` +
+    `<p class="facts">${beds(eu.median_beds_per_customer)} vs ${beds(us.median_beds_per_customer)} beds<span class="sep">|</span>${eu.median_hospitals_per_customer} vs ${us.median_hospitals_per_customer} hospitals<span class="sep">|</span>${usd(eu.arr_per_bed)} vs ${usd(us.arr_per_bed)} per bed<span class="sep">|</span>similar cost to win</p>`;
+  document.getElementById('unitTable').innerHTML = `
+    <div class="ue-grid">
+      <div class="ue-h"></div><div class="ue-h">Measure</div><div class="ue-h num"><i class="dot eu"></i>Europe</div><div class="ue-h num"><i class="dot us"></i>US</div><div class="ue-h"></div><div class="ue-h num">Europe vs US</div>
+      ${rows.map((r) => `
+        <div class="ue-step">${r.step}</div>
+        <div class="ue-label">${r.label} <i class="info" data-tip="${esc(r.info)}">i</i></div>
+        <div class="ue-v eu num">${r.fmt(r.eu)}</div>
+        <div class="ue-v us num">${r.fmt(r.us)}</div>
+        <div class="ue-viz" data-tip="${esc('<b>' + r.label + '</b><br>Europe ' + r.fmt(r.eu) + '<br>US ' + r.fmt(r.us))}">${bar(r)}</div>
+        <div class="ue-cmp num">${r.cmp}</div>`).join('')}
+    </div>`;
+}
+
+// ---------- charts (plain SVG) ----------
+// Compact payback card: two methods side by side, and what drives the gap
+function bridgeChart(eu, us) {
+  const b = eu.bridge;
+  document.getElementById('paybackCard').innerHTML = `
+    <h4>Why ${Math.round(eu.aggregate_payback)} vs. ${Math.round(eu.median_payback)} months?</h4>
+    <div class="pb-pair">
+      <div>
+        <div class="label">Median payback</div>
+        <div class="v ${eu.median_payback > 36 ? 'warn' : ''}">${months(eu.median_payback)}<small>mo</small></div>
+        <div class="d">Typical customer · research memo</div>
+      </div>
+      <div>
+        <div class="label">Aggregate payback</div>
+        <div class="v ${eu.aggregate_payback > 36 ? 'warn' : ''}">${months(eu.aggregate_payback)}<small>mo</small></div>
+        <div class="d">All customers together · Finance</div>
+      </div>
+    </div>
+    <p class="pb-note"><b>Two large customers drive the gap:</b> ${pct(b.top2_arr_share)} of European ARR, but only ${pct(b.top2_cac_share)} of CAC.
+      Excluding them, aggregate payback rises to ${Math.round(b.aggregate_without_top2)} months.</p>
+    <div class="pb-foot">Standard contract term: 36 months
+      <i class="info" data-tip="${esc('Payback = CAC ÷ (ARR × 80% ÷ 12). Median: the middle customer. Aggregate: total CAC ÷ total monthly gross profit. A typical US customer pays back in ' + months(us.median_payback) + ' months.')}">i</i></div>`;
+}
+
+// ---------- data notes ----------
+function notes(result) {
+  const rows = [];
+  for (const c of result.tables.customers) {
+    if (!c.is_valid_customer) rows.push(['warn', 'Excluded', c.customer_id, c.country_clean, c.customer_exclusion_reason]);
+    else if (c.customer_warnings) rows.push(['ok', 'Warning, kept', c.customer_id, c.country_clean, c.customer_warnings]);
+  }
+  for (const e of result.tables.metric_exclusions) if (e.metric !== 'All metrics') rows.push(['warn', 'Left out of a metric', e.customer_id, e.country, e.metric + ': ' + e.reason]);
+  const nEx = rows.filter((r) => r[1] === 'Excluded').length;
+  document.getElementById('notesCount').textContent = rows.length;
+  document.getElementById('notesSummary').innerHTML = `<b>${rows.length} data notes.</b> ${nEx} rows are excluded from all numbers; the rest are kept and flagged. Rules are in docs/Data Rules.xlsx.`;
+  document.getElementById('notesBody').innerHTML = `<table class="notes"><thead><tr><th>Customer</th><th>Status</th><th>Country</th><th>Detail</th></tr></thead><tbody>${rows.map((r) =>
+    `<tr><td class="id">${esc(r[2])}</td><td><span class="pill ${r[0]}">${esc(r[1])}</span></td><td>${esc(r[3])}</td><td>${esc(r[4])}</td></tr>`).join('')}</tbody></table>`;
+}
+
+// ---------- tabs ----------
+function show(view) {
+  document.querySelectorAll('.tab').forEach((t) => t.setAttribute('aria-selected', String(t.dataset.view === view)));
+  document.getElementById('view-overview').hidden = view !== 'overview';
+  document.getElementById('view-notes').hidden = view !== 'notes';
+  document.getElementById('view-sales').hidden = view !== 'sales';
+  document.body.dataset.view = view;
+  requestAnimationFrame(drawSparks);
+  document.getElementById('pageTitle').textContent = { notes: 'Data notes', sales: 'Country Sales View' }[view] || 'Europe Executive Summary';
+}
+document.querySelectorAll('.tab').forEach((t) => t.addEventListener('click', () => show(t.dataset.view)));
+
+// ---------- run ----------
+function render() {
+  const result = Pipeline.run(raw);
+  const m = result.metrics;
+  const t = result.data_through, n = +t.slice(-1);
+  const prevQ = n > 1 ? t.slice(0, 6) + (n - 1) : (+t.slice(0, 4) - 1) + '-Q4';
+  const prev = Pipeline.run(raw, { through: prevQ });
+  document.getElementById('context').innerHTML = `Data through <b>${t}</b> <span class="ctx-desc"><span class="sep">|</span> Europe's growth and unit economics each quarter, with the US for reference.</span>`;
+  tiles(m, prev.data_through === prevQ ? prev.metrics : null, t);
+  bridgeChart(m.EU, m.US);
+  oppCard(result);
+  proposalCard(result);
+  marketCard(result);
+  notes(result);
+}
+
+async function addFile(name, buffer) {
+  const wb = XLSX.read(buffer, { type: 'array' });
+  const found = Pipeline.addWorkbook(raw, XLSX, wb, name);
+  if (!found.length) throw new Error('No known sheets in ' + name);
+  loadedFiles.push(name);
+  render();
+  document.getElementById('status').textContent = 'Sources: ' + loadedFiles.join(', ');
+}
+
+fetch(BASE_FILE).then((r) => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
+  .then((buf) => addFile(BASE_FILE.split('/').pop(), buf))
+  .catch((e) => { document.getElementById('context').textContent = 'Could not load ' + BASE_FILE + ' (' + e.message + ')'; });
+
+const takeFile = (f) => f && f.arrayBuffer().then((b) => addFile(f.name, b)).catch((e) => { document.getElementById('status').textContent = e.message; });
+document.getElementById('file').addEventListener('change', (e) => takeFile(e.target.files[0]));
+let dragDepth = 0;
+addEventListener('dragenter', (e) => { e.preventDefault(); dragDepth++; document.body.classList.add('dragging'); });
+addEventListener('dragleave', () => { if (--dragDepth <= 0) { dragDepth = 0; document.body.classList.remove('dragging'); } });
+addEventListener('dragover', (e) => e.preventDefault());
+addEventListener('drop', (e) => { e.preventDefault(); dragDepth = 0; document.body.classList.remove('dragging'); takeFile(e.dataTransfer.files[0]); });
+</script>
+</body>
+</html>

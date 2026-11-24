@@ -1,1 +1,12 @@
-{"name":"aidoc-europe-dashboard","version":"0.1.0","private":true,"scripts":{"export":"node src/export.js"},"dependencies":{"xlsx":"https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"}}
+{
+    "name":  "aidoc-europe-dashboard",
+    "version":  "0.1.0",
+    "private":  true,
+    "scripts":  {
+                    "export":  "node src/export.js",
+                    "serve":  "node src/serve.js"
+                },
+    "dependencies":  {
+                         "xlsx":  "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+                     }
+}

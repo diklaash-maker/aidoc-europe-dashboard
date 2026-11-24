@@ -50,6 +50,17 @@ npm run export -- --through 2026-Q3  # data through 2026-Q3     -> data/clean/as
 
 The console prints a summary (excluded rows, valid / active / churned customers and current ARR per region) to check the output.
 
+## The dashboard
+
+`index.html` loads the data pack from `data/raw/` and runs the same `src/pipeline.js` in the browser.
+
+```
+npm run serve     # then open http://localhost:8080
+```
+
+Tabs: **Executive summary** (ELT, Europe vs US), **Country sales view** (country leads, phone friendly), **Data notes** (excluded rows and warnings).
+To show the next quarter, click "+ Add quarter file" or drag the Excel file onto the page.
+
 ## Adding next quarter's data
 
 1. Copy the new quarter's Excel file into `data/raw/` (same sheet formats: `customers_new`, `quarterly_arr`).
