@@ -434,12 +434,14 @@ function chipPts(cur, base, label) {
   if (!d) return `<span class="chip"><span class="arr">●</span>0 pts ${label}</span>`;
   return `<span class="chip"><span class="arr ${d > 0 ? 'good' : 'bad'}">${d > 0 ? '▲' : '▼'}</span>${Math.abs(d)} pts ${label}</span>`;
 }
+// Plan attainment: one decimal when rounding would hide a miss or a beat (99.7% must not read as 100%)
+const attain = (a) => (Math.round(a * 100) === 100 && Math.abs(a - 1) > 1e-9 ? (a * 100).toFixed(1) : Math.round(a * 100)) + '%';
 // Plan attainment as a progress bar: % above the knob, plan value as the goal
 function planChip(cur, plan, absFmt, goalFmt, goalText) {
   if (!plan || cur === '') return '';
   const a = cur / plan, w = Math.min(a, 1) * 100, d = cur - plan;
-  return `<div class="goal" data-tip="${esc('<b>' + Math.round(a * 100) + '% of plan</b><br>Actual ' + goalFmt(cur) + ' · plan ' + goalFmt(plan) + '<br>' + (d >= 0 ? 'Above plan by ' : 'Short of plan by ') + absFmt(Math.abs(d)))}">
-    <div class="gap ${d >= 0 ? 'good' : 'bad'}">${d >= 0 ? '+' : '−'}${absFmt(Math.abs(d))} ${d >= 0 ? 'above plan' : 'short'}</div><div class="track"><div class="fill" style="width:${w}%"></div><span class="knob" style="left:${w}%"><span class="pct">${Math.round(a * 100)}%</span></span></div>
+  return `<div class="goal" data-tip="${esc('<b>' + attain(a) + ' of plan</b><br>Actual ' + goalFmt(cur) + ' · plan ' + goalFmt(plan) + '<br>' + (d >= 0 ? 'Above plan by ' : 'Short of plan by ') + absFmt(Math.abs(d)))}">
+    <div class="gap ${d >= 0 ? 'good' : 'bad'}">${d >= 0 ? '+' : '−'}${absFmt(Math.abs(d))} ${d >= 0 ? 'above plan' : 'short'}</div><div class="track"><div class="fill" style="width:${w}%"></div><span class="knob" style="left:${w}%"><span class="pct">${attain(a)}</span></span></div>
     <div class="goal-text"><span>${goalText || 'Plan <span class="abs">' + goalFmt(plan) + '</span>'}</span></div>
   </div>`;
 }
@@ -447,7 +449,7 @@ function planChip(cur, plan, absFmt, goalFmt, goalText) {
 function planPct(cur, plan) {
   if (!plan || cur === '') return '';
   const good = cur >= plan;
-  return '<span class="chip"><span class="arr ' + (good ? 'good' : 'bad') + '">' + (good ? '▲' : '▼') + '</span>' + Math.round((cur / plan) * 100) + '% of plan</span>';
+  return '<span class="chip"><span class="arr ' + (good ? 'good' : 'bad') + '">' + (good ? '▲' : '▼') + '</span>' + attain(cur / plan) + ' of plan</span>';
 }
 const status = (ok, okText, warnText) => `<span class="chip ${ok ? 'ok' : 'warn'}">${ok ? okText : warnText}</span>`;
 // Sparklines are drawn at the real size of their slot (so they fill it without distortion).
@@ -542,7 +544,7 @@ function tiles(m, prev, through) {
     { title: 'Is Europe growing?',
       summary: `Europe is growing ${eu.yoy_growth >= us.yoy_growth ? 'faster' : 'slower'} than the US, ${eu.arr_attainment === '' ? '' : eu.arr_attainment >= 1 ? 'and is on its ARR plan.' : 'but remains below its ARR plan.'}`,
       facts: [`ARR ${sign(eu.yoy_growth)}${pct(eu.yoy_growth, 1)} YoY vs US ${sign(us.yoy_growth)}${pct(us.yoy_growth, 1)}`,
-        eu.arr_attainment === '' ? '' : `${pct(eu.current_arr / eu.arr_plan)} of ${through.slice(5)} ARR plan vs US ${pct(us.current_arr / us.arr_plan)}`,
+        eu.arr_attainment === '' ? '' : `${attain(eu.current_arr / eu.arr_plan)} of ${through.slice(5)} ARR plan vs US ${attain(us.current_arr / us.arr_plan)}`,
         `${eu.new_customers_ytd} of ${eu.new_customers_plan_ytd} new customers planned ${qRange}`].filter(Boolean),
       tiles: [
       { label: through.slice(5) + ' ARR', info: 'Sum of ARR in the latest quarter, active customers only (billing system).',
@@ -609,7 +611,7 @@ function tiles(m, prev, through) {
   const [arrT, newT, actT] = groups[0].tiles, [perCustT, perBedT] = groups[1].tiles, [pbT, finT, ctyT] = groups[2].tiles;
   const yoyActive = yearAgo(eu.active_by_quarter, 'count'), covering = eu.contribution.filter((k) => k.contribution >= 0).map((k) => k.country === 'United Kingdom' ? 'UK' : k.country);
   arrT.sum = `Europe is growing ${eu.yoy_growth >= us.yoy_growth ? 'faster' : 'slower'} than the US${eu.arr_attainment === '' ? '.' : eu.arr_attainment >= 1 ? ', and is on plan.' : ', but is still below plan.'}`;
-  arrT.facts = [`${sign(eu.yoy_growth)}${pct(eu.yoy_growth, 1)} YoY vs US ${sign(us.yoy_growth)}${pct(us.yoy_growth, 1)}`, eu.arr_plan ? `${pct(eu.current_arr / eu.arr_plan)} of ${through.slice(5)} ARR plan vs US ${pct(us.current_arr / us.arr_plan)}` : ''];
+  arrT.facts = [`${sign(eu.yoy_growth)}${pct(eu.yoy_growth, 1)} YoY vs US ${sign(us.yoy_growth)}${pct(us.yoy_growth, 1)}`, eu.arr_plan ? `${attain(eu.current_arr / eu.arr_plan)} of ${through.slice(5)} ARR plan vs US ${attain(us.current_arr / us.arr_plan)}` : ''];
   newT.sum = `New customer growth is ${eu.new_customers_ytd > eu.new_customers_prev_ytd ? 'up' : eu.new_customers_ytd === eu.new_customers_prev_ytd ? 'flat' : 'down'} vs. last year and ${eu.new_customers_ytd >= eu.new_customers_plan_ytd ? 'on' : 'below'} plan.`;
   newT.facts = [`${eu.new_customers_ytd} vs ${eu.new_customers_plan_ytd} planned ${qRange}`, `${eu.new_customers_plan_year} planned for the year`, `${eu.new_customers_prev_ytd} in the same period last year`];
   actT.sum = `Europe has ${Math.abs(eu.active_customers - yoyActive)} ${eu.active_customers >= yoyActive ? 'more' : 'fewer'} active customers than last year.`;
