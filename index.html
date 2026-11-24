@@ -100,8 +100,10 @@ body { margin: 0; background: var(--page); color: var(--ink); font: 14px/1.45 In
 .ue-contract { position: absolute; top: -6px; bottom: -6px; width: 0; border-left: 1.5px solid var(--orange); }
 .ue-contract em { position: absolute; top: -12px; left: 4px; font-style: normal; font-size: 10.5px; color: var(--orange-ink); white-space: nowrap; }
 .pb-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
-.pr-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
-.pr-cases { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; padding-top: 14px; }
+.pr-body { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; }
+.pr-stats { display: grid; grid-template-columns: repeat(3, auto); gap: 44px; padding-right: 36px; }
+.pr-stats .cv-d { max-width: 170px; }
+.pr-cases { display: grid; grid-template-columns: 1fr; gap: 14px; padding-left: 36px; border-left: 1px solid var(--line); }
 .pr-case { font-size: 13px; font-weight: 600; color: var(--ink); }
 .pr-cases p { margin: 4px 0 0; font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }
 .mk-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -208,7 +210,7 @@ body { margin: 0; background: var(--page); color: var(--ink); font: 14px/1.45 In
   .ue-contract em { left: auto; right: 4px; top: auto; bottom: -16px; }
   .ue-viz { padding-bottom: 12px; }
   .ue-card { overflow: hidden; }
-  .pr-stats { grid-template-columns: 1fr 1fr; } .pr-cases, .mk-stats { grid-template-columns: 1fr; gap: 14px; }
+  .pr-body { grid-template-columns: 1fr; } .pr-stats { grid-template-columns: 1fr 1fr; gap: 16px; padding: 0 0 14px; border-bottom: 1px solid var(--line); } .pr-cases { padding: 14px 0 0; border-left: 0; } .mk-stats { grid-template-columns: 1fr; gap: 14px; }
   .pb-pair .v { font-size: 28px; }
 }
 .page-head .context { font-size: 13.5px; }
@@ -339,7 +341,7 @@ body[data-view="sales"] .ctx-desc { display: none; }
     <div id="tiles"></div>
 
     <div class="group">
-      <div class="group-head"><h3>How does a European customer compare?</h3></div>
+      <div class="group-head"><h3>Why is payback longer in Europe?</h3></div>
       <div class="ue-summary" id="ueSummary"></div>
       <div class="ue-row">
         <div class="card ue-card" id="unitTable"></div>
@@ -605,11 +607,11 @@ function tiles(m, prev, through) {
   // One summary sentence per card (computed, so it follows the data), with its key numbers
   const [arrT, newT, actT] = groups[0].tiles, [perCustT, perBedT] = groups[1].tiles, [pbT, finT, ctyT] = groups[2].tiles;
   const yoyActive = yearAgo(eu.active_by_quarter, 'count'), covering = eu.contribution.filter((k) => k.contribution >= 0).map((k) => k.country === 'United Kingdom' ? 'UK' : k.country);
-  arrT.sum = `Europe is growing ${eu.yoy_growth >= us.yoy_growth ? 'faster' : 'slower'} than the US${eu.arr_attainment === '' ? '.' : eu.arr_attainment >= 1 ? ', and is on its ARR plan.' : ', but remains below its ARR plan.'}`;
+  arrT.sum = `Europe is growing ${eu.yoy_growth >= us.yoy_growth ? 'faster' : 'slower'} than the US${eu.arr_attainment === '' ? '.' : eu.arr_attainment >= 1 ? ', and is on plan.' : ', but is still below plan.'}`;
   arrT.facts = [`${sign(eu.yoy_growth)}${pct(eu.yoy_growth, 1)} YoY vs US ${sign(us.yoy_growth)}${pct(us.yoy_growth, 1)}`, eu.arr_plan ? `${pct(eu.current_arr / eu.arr_plan)} of ${through.slice(5)} ARR plan vs US ${pct(us.current_arr / us.arr_plan)}` : ''];
-  newT.sum = `New customers are ${eu.new_customers_ytd >= eu.new_customers_plan_ytd ? 'on' : 'behind'} plan for ${qRange}, ${eu.new_customers_ytd > eu.new_customers_prev_ytd ? 'ahead of' : eu.new_customers_ytd === eu.new_customers_prev_ytd ? 'level with' : 'behind'} last year.`;
+  newT.sum = `New customer growth is ${eu.new_customers_ytd > eu.new_customers_prev_ytd ? 'up' : eu.new_customers_ytd === eu.new_customers_prev_ytd ? 'flat' : 'down'} vs. last year and ${eu.new_customers_ytd >= eu.new_customers_plan_ytd ? 'on' : 'below'} plan.`;
   newT.facts = [`${eu.new_customers_ytd} vs ${eu.new_customers_plan_ytd} planned ${qRange}`, `${eu.new_customers_plan_year} planned for the year`, `${eu.new_customers_prev_ytd} in the same period last year`];
-  actT.sum = `Europe has ${Math.abs(eu.active_customers - yoyActive)} ${eu.active_customers >= yoyActive ? 'more' : 'fewer'} active customers than a year ago.`;
+  actT.sum = `Europe has ${Math.abs(eu.active_customers - yoyActive)} ${eu.active_customers >= yoyActive ? 'more' : 'fewer'} active customers than last year.`;
   actT.facts = [`${sign(eu.active_customers / yoyActive - 1)}${pct(eu.active_customers / yoyActive - 1, 1)} YoY vs US ${sign(us.active_customers / yearAgo(us.active_by_quarter, 'count') - 1)}${pct(us.active_customers / yearAgo(us.active_by_quarter, 'count') - 1, 1)}`];
   perCustT.sum = `A typical European customer brings ${pct(eu.median_arr_per_customer / us.median_arr_per_customer)} of the ARR of a typical US customer.`;
   perCustT.facts = [`Median ${usdRound(eu.median_arr_per_customer)} vs US ${usdRound(us.median_arr_per_customer)}`];
@@ -685,7 +687,7 @@ function oppCard(result) {
     </div>
     <div class="cv-head"><h3 class="cv-title" id="cvTitle"></h3></div>
     <div id="cvStats"></div>
-    <h3 class="cv-title cv-next">Who to go after next?</h3>
+    <h3 class="cv-title cv-next">Where Should We Focus Next?</h3>
     <p class="cv-lead">Largest unconverted hospital groups, ranked by bed count.</p>
     <div class="card op-card" id="oppList"></div>`;
   document.getElementById('oppCountry').addEventListener('change', (e) => { OPP.country = e.target.value; countryStats(); oppList(); });
@@ -745,6 +747,7 @@ function proposalCard(result) {
   document.getElementById('proposalCard').innerHTML = `
     <h4>FY2027 "Accelerate Europe" proposal</h4>
     <p class="pr-lead">The EU GM's proposed investment, alongside the research team's alternative.</p>
+    <div class="pr-body">
     <div class="pr-stats">
       <div><div class="label">Requested funding</div><div class="cv-num">${usdRound(p.investment)}</div></div>
       <div><div class="label">New logos target</div><div class="cv-num">${p.new_logos}</div>${planYear ? `<div class="cv-d">${(p.new_logos / planYear).toFixed(1)}× the FY${result.data_through.slice(0, 4)} target of ${planYear} new logos</div>` : ''}</div>
@@ -753,6 +756,7 @@ function proposalCard(result) {
     <div class="pr-cases">
       <div><div class="pr-case">GM's growth case</div><p>${p.headcount_people ? p.headcount_people + ' additional staff and ' : ''}${usdRound(p.projected_arr)} expected new ARR, assuming ${usdK(p.arr_per_new_logo)} per logo. New countries: ${p.new_countries.join(', ')}.</p></div>
       <div><div class="pr-case">Research alternative</div><p>Prioritize the ${bigProspects} large prospects (${BIG_BEDS.toLocaleString('en-US')}+ beds) in existing countries instead of new market entry.</p></div>
+    </div>
     </div>`;
 }
 
@@ -806,7 +810,7 @@ function unitTable(eu, us) {
     </div>`;
   };
   document.getElementById('ueSummary').innerHTML =
-    `<p class="headline">A European customer is about a tenth of the size of a US one and pays less per bed, so it brings ${pct(ratio(eu.median_arr_per_customer, us.median_arr_per_customer))} of the ARR. It costs ${pct(ratio(eu.median_cac, us.median_cac))} as much to win, so it takes ${Math.round(ratio(eu.median_payback, us.median_payback))}× longer to pay back.</p>` +
+    `<p class="headline">European customers are smaller and pay less per bed. They generate only ${pct(ratio(eu.median_arr_per_customer, us.median_arr_per_customer))} of the ARR of US customers, but cost ${pct(ratio(eu.median_cac, us.median_cac))} as much to acquire. As a result, payback takes ${Math.round(ratio(eu.median_payback, us.median_payback))}× longer.</p>` +
     `<p class="facts">${beds(eu.median_beds_per_customer)} vs ${beds(us.median_beds_per_customer)} beds<span class="sep">|</span>${eu.median_hospitals_per_customer} vs ${us.median_hospitals_per_customer} hospitals<span class="sep">|</span>${usd(eu.arr_per_bed)} vs ${usd(us.arr_per_bed)} per bed<span class="sep">|</span>similar cost to win</p>`;
   document.getElementById('unitTable').innerHTML = `
     <div class="ue-grid">
