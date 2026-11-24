@@ -408,14 +408,17 @@ const icon = (k) => `<span class="icon"><svg viewBox="0 0 24 24" fill="none" str
 
 // ---------- tooltip ----------
 const tip = document.getElementById('tip');
-document.addEventListener('mousemove', (e) => {
-  const t = e.target.closest('[data-tip]');
+function showTip(t, cx, cy) {
   if (!t) { tip.style.opacity = 0; return; }
   tip.innerHTML = t.getAttribute('data-tip');
-  const x = Math.min(e.clientX + 14, window.innerWidth - tip.offsetWidth - 8);
-  const y = Math.min(e.clientY + 14, window.innerHeight - tip.offsetHeight - 8);
+  const x = Math.max(8, Math.min(cx + 14, window.innerWidth - tip.offsetWidth - 8));
+  const y = Math.min(cy + 14, window.innerHeight - tip.offsetHeight - 8);
   tip.style.left = x + 'px'; tip.style.top = y + 'px'; tip.style.opacity = 1;
-});
+}
+document.addEventListener('mousemove', (e) => showTip(e.target.closest('[data-tip]'), e.clientX, e.clientY));
+// Touch screens have no hover: a tap shows the tip, a tap elsewhere or a scroll hides it
+document.addEventListener('click', (e) => { if (matchMedia('(hover: none)').matches) showTip(e.target.closest('[data-tip]'), e.clientX, e.clientY); });
+addEventListener('scroll', () => { if (matchMedia('(hover: none)').matches) tip.style.opacity = 0; }, { passive: true });
 
 // ---------- KPI tiles ----------
 // A comparison chip: colored arrow, gray % text, absolute change in parentheses
@@ -554,7 +557,7 @@ function tiles(m, prev, through) {
         spark: spark(eu.arr_by_quarter.map((d) => ({ label: d.quarter.replace('-', ' '), value: d.arr, plan: d.plan || 0 })), usdRound),
         ref: `Europe is <b>${pct(eu.current_arr / (eu.current_arr + us.current_arr), 1)}</b> of company ARR. The US added <b>${Math.round(us.arr_added_12m / eu.arr_added_12m)}×</b> more ARR in $.`,
         us: usdRound(us.current_arr), usChips: [chip(us.current_arr, us.current_arr - us.arr_added_12m, 'YoY', usdRound), planPct(us.current_arr, us.arr_plan)] },
-      { label: 'New customers, ' + through.slice(0, 4) + ' to date', info: 'Valid customers by signing quarter. Compared with the same quarters last year and with the board plan.',
+      { label: 'New customers, ' + through.slice(0, 4) + (through.endsWith('Q4') ? '' : ' to date'), info: 'Valid customers by signing quarter. Compared with the same quarters last year and with the board plan.',
         value: String(eu.new_customers_ytd) + `<small>of ${eu.new_customers_plan_ytd} planned</small>`,
         chips: [chip(eu.new_customers_ytd, eu.new_customers_prev_ytd, 'YoY', (d) => String(d)), planChip(eu.new_customers_ytd, eu.new_customers_plan_ytd, (d) => String(d), (d) => String(d),
           through.endsWith('Q4') ? '' : `Plan ${qRange} <span class="abs">${eu.new_customers_plan_ytd}</span> · year <span class="abs">${eu.new_customers_plan_year}</span>`)],
@@ -896,6 +899,13 @@ function render() {
 }
 
 async function addFile(name, buffer) {
+  if (loadedFiles.includes(name)) {
+    document.getElementById('status').textContent = name + ' is already loaded. Nothing changed.';
+    tip.innerHTML = '<b>' + esc(name) + '</b><br>is already loaded. Nothing changed.';
+    tip.style.left = Math.max(8, (innerWidth - tip.offsetWidth) / 2) + 'px'; tip.style.top = '90px'; tip.style.opacity = 1;
+    setTimeout(() => { tip.style.opacity = 0; }, 2500);
+    return;
+  }
   const wb = XLSX.read(buffer, { type: 'array' });
   const found = Pipeline.addWorkbook(raw, XLSX, wb, name);
   if (!found.length) throw new Error('No known sheets in ' + name);

@@ -353,8 +353,13 @@
   // ---------- run ----------
   function run(raw, opts = {}) {
     const countryCosts = cleanCountryCosts(raw.country_costs || []);
-    let quarterlyArr = raw.quarterly_arr || [];
-    let customers = raw.customers || [];
+    // Load safety: the same file loaded twice must not double count.
+    // Billing: one row per logo per quarter (the last one loaded wins). Customers: one row per customer_id.
+    const lastBill = new Map();
+    for (const r of raw.quarterly_arr || []) lastBill.set(r.logo_id + '|' + r.quarter, r);
+    let quarterlyArr = [...lastBill.values()];
+    const seenIds = new Set();
+    let customers = (raw.customers || []).filter((c) => !seenIds.has(c.customer_id) && seenIds.add(c.customer_id));
 
     // Optional: simulate loading data only through a given quarter
     if (opts.through) {
